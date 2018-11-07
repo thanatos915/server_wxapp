@@ -362,6 +362,37 @@ class Menu
                         ]
                     ],
                     [
+                        'key' => 'dingshi',
+                        'name' => '定时购',
+                        'is_menu' => true,
+                        'route' => 'mch/dingshi/index',
+                        'children' => [
+                            [
+                                'name' => '开放时间',
+                                'is_menu' => true,
+                                'route' => 'mch/dingshi/index',
+                            ],
+                            [
+
+                                'name' => '商品设置',
+                                'is_menu' => true,
+                                'route' => 'mch/dingshi/goods',
+                                'sub' => [
+                                    [
+                                        'name' => '商品编辑',
+                                        'is_menu' => false,
+                                        'route' => 'mch/dingshi/goods-edit',
+                                    ],
+                                    [
+                                        'name' => '商品详情',
+                                        'is_menu' => false,
+                                        'route' => 'mch/dingshi/goods-detail',
+                                    ],
+                                ],
+                            ],
+                        ],
+                    ],
+                    [
                         'name' => '淘宝CSV上传',
                         'is_menu' => true,
                         'route' => 'mch/goods/taobao-copy',

@@ -11,6 +11,7 @@ namespace app\models;
 use Yii;
 
 /**
+ * @property \app\hejiang\ValidationErrorResponse $errorResponse
  * @property Store $store
  */
 class Model extends \yii\base\Model

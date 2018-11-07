@@ -6095,3 +6095,68 @@ CREATE TABLE `hjmall_template_msg` (
   PRIMARY KEY (`id`),
   UNIQUE KEY `store_id_tpl_name` (`store_id`,`tpl_name`)
 ) DEFAULT CHARSET=utf8;
+
+-- v2.8.8
+
+ALTER TABLE hjmall_store ADD is_comment tinyint(4) NOT NULL DEFAULT '1' COMMENT '商城评价开关：0.关闭 1.开启';
+
+ALTER TABLE `hjmall_ms_order`
+ADD COLUMN `seller_comments`  mediumtext CHARACTER SET utf8 COLLATE utf8_general_ci NULL COMMENT '商家备注' AFTER `is_show`;
+
+ALTER TABLE `hjmall_pt_order`
+ADD COLUMN `seller_comments`  mediumtext CHARACTER SET utf8 COLLATE utf8_general_ci NULL COMMENT '商家备注' AFTER `is_show`;
+
+ALTER TABLE `hjmall_yy_order`
+ADD COLUMN `seller_comments`  mediumtext CHARACTER SET utf8 COLLATE utf8_general_ci NULL COMMENT '商家备注' AFTER `is_show`,
+ADD COLUMN `attr`  longtext CHARACTER SET utf8 COLLATE utf8_general_ci NULL COMMENT '规格' AFTER `seller_comments`;
+
+ALTER TABLE `hjmall_yy_goods`
+ADD COLUMN `attr`  longtext CHARACTER SET utf8 COLLATE utf8_general_ci NULL COMMENT '规格' AFTER `stock`,
+ADD COLUMN `use_attr`  smallint(1) NULL DEFAULT 0 COMMENT '是否启用规格' AFTER `attr`;
+
+-- 2.8.9
+
+CREATE TABLE `hjmall_mch_option` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `store_id` int(11) NOT NULL DEFAULT '0',
+  `mch_id` int(11) NOT NULL DEFAULT '0',
+  `group` varchar(255) NOT NULL DEFAULT '',
+  `name` varchar(255) NOT NULL DEFAULT '',
+  `value` longtext NOT NULL,
+  PRIMARY KEY (`id`)
+) DEFAULT CHARSET=utf8;
+
+ALTER TABLE `hjmall_mch`
+ADD COLUMN `longitude`  varchar(255) NOT NULL DEFAULT 0 COMMENT '经度',
+ADD COLUMN `latitude`  varchar(255) NOT NULL DEFAULT 0 COMMENT '纬度';
+
+-- 2.9.0
+
+ALTER TABLE `hjmall_cash` ADD COLUMN `service_charge`  decimal(11,2) NOT NULL DEFAULT 0 COMMENT '提现手续费';
+
+ALTER TABLE hjmall_store ADD is_sales tinyint(4) NOT NULL DEFAULT '1' COMMENT '商城商品销量开关：0.关闭 1.开启';
+ALTER TABLE hjmall_pt_order_refund ADD is_agree smallint(1) NOT NULL DEFAULT '0' COMMENT '是否已同意退、换货：0=待处理，1=已同意，2=已拒绝';
+ALTER TABLE hjmall_pt_order_refund ADD is_user_send smallint(1) NOT NULL DEFAULT '0' COMMENT '用户已发货：0=未发货，1=已发货';
+ALTER TABLE hjmall_pt_order_refund ADD user_send_express varchar(32) NOT NULL DEFAULT '' COMMENT '用户发货快递公司';
+ALTER TABLE hjmall_pt_order_refund ADD user_send_express_no varchar(32) NOT NULL DEFAULT '' COMMENT '用户发货快递单号';
+ALTER TABLE hjmall_pt_order_refund ADD address_id int(11) DEFAULT '0' COMMENT '退货 换货地址id';
+ALTER TABLE hjmall_ms_order_refund ADD is_agree smallint(1) NOT NULL DEFAULT '0' COMMENT '是否已同意退、换货：0=待处理，1=已同意，2=已拒绝';
+ALTER TABLE hjmall_ms_order_refund ADD is_user_send smallint(1) NOT NULL DEFAULT '0' COMMENT '用户已发货：0=未发货，1=已发货';
+ALTER TABLE hjmall_ms_order_refund ADD user_send_express varchar(32) NOT NULL DEFAULT '' COMMENT '用户发货快递公司';
+ALTER TABLE hjmall_ms_order_refund ADD user_send_express_no varchar(32) NOT NULL DEFAULT '' COMMENT '用户发货快递单号';
+ALTER TABLE hjmall_ms_order_refund ADD address_id int(11) DEF["coupon","share","topic","video","copyright"]["coupon","share","topic","video","copyright"]AULT '0' COMMENT '退货 换货地址id';
+
+ALTER TABLE `hjmall_coupon` ADD COLUMN `rule`  varchar(1000) NULL DEFAULT '' COMMENT '使用说明' AFTER `user_num`;
+ALTER TABLE `hjmall_home_nav` ADD COLUMN `is_hide`  smallint(1) NOT NULL DEFAULT 0 COMMENT '是否隐藏 0 显示 1隐藏 ' AFTER `is_delete`;
+
+ALTER TABLE `hjmall_setting` ADD share_good_status tinyint(4) NOT NULL DEFAULT '0' COMMENT '购买商品自动成为分销商：0.关闭 1.任意商品 2.指定商品';
+
+ALTER TABLE `hjmall_setting` ADD share_good_id int(11) NOT NULL DEFAULT '0' COMMENT '购买指定分销商品Id';
+
+ALTER TABLE `hjmall_goods` ADD COLUMN `is_negotiable`  smallint(1) NOT NULL DEFAULT 0 COMMENT '是否面议 0 不面议 1面议' AFTER `type`;
+
+ALTER TABLE `hjmall_store` ADD is_member_price tinyint(1) NOT NULL DEFAULT '1' COMMENT '会员价是否显示 0.不显示|1.显示';
+ALTER TABLE `hjmall_store` ADD is_share_price tinyint(1) NOT NULL DEFAULT '1' COMMENT '分销价是否显示 0.不显示|1.显示';
+ALTER TABLE `hjmall_store` ADD COLUMN `is_member` smallint(1) NULL DEFAULT 0 COMMENT '是否购买会员 0不支持 1支持';
+ALTER TABLE `hjmall_level` ADD COLUMN `synopsis`  longtext NULL COMMENT '会员权益(禁用)';
+ALTER TABLE `hjmall_topic` ADD COLUMN `qrcode_pic` longtext NULL COMMENT '海报分享图';

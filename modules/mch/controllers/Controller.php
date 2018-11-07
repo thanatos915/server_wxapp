@@ -180,10 +180,9 @@ class Controller extends \app\controllers\Controller
     public function getMenuList()
     {
         $cacheKey = $this->getMenuCacheKey();
-        if ($res = Yii::$app->getCache()->get($cacheKey)) {
-            return $res;
-        }
-
+//        if ($res = Yii::$app->getCache()->get($cacheKey)) {
+//            return $res;
+//        }
         $m = new MchMenu();
         $m->platform = $this->platform;
         if ($this->is_we7) {

@@ -16,8 +16,8 @@ class InstallController extends Controller
 {
     public function actionIndex()
     {
-        throw new HttpException(403);
-        return;
+//        throw new HttpException(403);
+//        return;
         $install_lock_file = \Yii::$app->basePath . '/install.lock.php';
         if (file_exists($install_lock_file)) {
             \Yii::$app->response->redirect(\Yii::$app->urlManager->createUrl(['admin']))->send();

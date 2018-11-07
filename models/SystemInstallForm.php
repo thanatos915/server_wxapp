@@ -122,7 +122,7 @@ EOF;
             $t = $this->db->beginTransaction();
             $sql = "INSERT INTO `{$admin_table_name}` 
 (`id`, `username`,               `password`,         `auth_key`,   `access_token`,   `addtime`, `is_delete`, `app_max_count`, `permission`,                                              `remark`, `expire_time`) VALUES 
-( 1,   '{$this->admin_username}','{$admin_password}','{$auth_key}','{$access_token}', 0,         0,           0,              '[\"coupon\",\"share\",\"topic\",\"video\",\"copyright\"]',' ',       0);";
+( 1,   '{$this->admin_username}','{$admin_password}','{$auth_key}','{$access_token}', 0,         0,           0,              '[\"coupon\",\"share\",\"topic\",\"video\",\"copyright\",\"bargain\",\"alipay\",\"miaosha\",\"pintuan\",\"book\",\"fxhb\",\"mch\",\"integralmall\",\"permission\",\"pond\",\"scratch\",\"dingshi\"]',' ',       0);";
             $res = $this->db->createCommand($sql)->execute();
             $t->commit();
             if ($res) {

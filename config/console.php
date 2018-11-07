@@ -20,7 +20,7 @@ $config = [
                 ],
             ],
         ],
-        'db' => null // $db,
+        'db' => require( __DIR__ . '/ind_db.php') // $db,
     ],
     'params' => $params,
     /*
