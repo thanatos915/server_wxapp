@@ -39,6 +39,7 @@ use yii\web\IdentityInterface;
  * @property string $binding
  * @property string $wechat_platform_open_id
  * @property integer $platform
+ * @property integer $is_shop_admin
  */
 class User extends \yii\db\ActiveRecord implements IdentityInterface
 {
@@ -73,7 +74,7 @@ class User extends \yii\db\ActiveRecord implements IdentityInterface
     public function rules()
     {
         return [
-            [['type', 'addtime', 'is_delete', 'store_id', 'is_distributor', 'parent_id', 'time', 'is_clerk', 'we7_uid', 'shop_id', 'level', 'integral', 'total_integral'], 'integer'],
+            [['type', 'addtime', 'is_delete', 'store_id', 'is_distributor', 'parent_id', 'time', 'is_clerk', 'we7_uid', 'shop_id', 'level', 'integral', 'total_integral', 'is_shop_admin'], 'integer'],
             [['username', 'password', 'auth_key', 'access_token', 'avatar_url'], 'required'],
             [['avatar_url', 'binding'], 'string'],
             [['total_price', 'price', 'money', 'order_money'], 'number'],
@@ -118,6 +119,7 @@ class User extends \yii\db\ActiveRecord implements IdentityInterface
             'binding' => '授权手机号',
             'wechat_platform_open_id' => '微信公众号openid',
             'platform' => '小程序平台 微信:wx，支付宝:my',
+            'is_shop_admin' => '是否是门店管理员'
         ];
     }
 

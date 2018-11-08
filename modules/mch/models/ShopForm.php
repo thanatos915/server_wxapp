@@ -84,6 +84,10 @@ class ShopForm extends MchModel
         if (is_array($this->shop_pic)) {
             $shop->cover_url = $this->shop_pic[0];
         }
+
+        $user = User::findOne(['id' => $this->user_id]);
+        $user->is_shop_admin = 1;
+        $user->save();
         if ($shop->save()) {
             ShopPic::updateAll(['is_delete' => 1], ['shop_id' => $shop->id]);
             foreach ($this->shop_pic as $pic_url) {

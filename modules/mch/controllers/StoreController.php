@@ -1165,13 +1165,17 @@ class StoreController extends Controller
                 'msg' => '网络异常',
             ];
         }
+        /**
         $user_exit = User::find()->where(['store_id' => $this->store->id, 'is_delete' => 0, 'shop_id' => $id])->exists();
         if ($user_exit) {
             return [
                 'code' => 1,
                 'msg' => '请先删除门店下的核销员',
             ];
-        }
+        }*/
+
+        $shop->user->is_shop_admin = 0;
+        $shop->user->save();
         $shop->is_delete = 1;
         if ($shop->save()) {
             return [
