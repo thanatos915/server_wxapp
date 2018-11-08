@@ -41,7 +41,8 @@ class QrcodeForm extends ApiModel
             file_put_contents($saveRoot . $saveDir . '.gitignore', "*\r\n!.gitignore");
         }
         $saveName = md5(uniqid()) . '.jpg';
-        $webRoot = str_replace('http://', 'https://', \Yii::$app->request->hostInfo . \Yii::$app->request->baseUrl . '/temp/' . $saveName);
+//        $webRoot = str_replace('http://', 'https://', \Yii::$app->request->hostInfo . \Yii::$app->request->baseUrl . '/temp/' . $saveName);
+        $webRoot = \Yii::$app->request->hostInfo . \Yii::$app->request->baseUrl . '/temp/' . $saveName;
         file_put_contents($saveRoot . $saveDir . $saveName, file_get_contents($res['file_path']));
 
         return [

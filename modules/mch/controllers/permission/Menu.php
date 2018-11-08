@@ -417,6 +417,11 @@ class Menu
                             ]
                         ],
                     ],
+                    [
+                        'name' => '佣金提现',
+                        'is_menu' => true,
+                        'route' => 'mch/share/cash',
+                    ],
                 ],
             ],
             [
@@ -631,6 +636,7 @@ class Menu
                     ],
                 ],
             ],
+            /*
             [
                 'key' => 'share',
                 'name' => '分销中心',
@@ -686,6 +692,7 @@ class Menu
                         'is_menu' => true,
                         'route' => 'mch/share/order',
                     ],
+
                     [
                         'name' => '分销提现',
                         'is_menu' => true,
@@ -722,6 +729,7 @@ class Menu
                     ],
                 ],
             ],
+            */
             [
                 'name' => '内容管理',
                 'is_menu' => true,
