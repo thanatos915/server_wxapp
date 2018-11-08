@@ -5,6 +5,7 @@
  * Date: 2017/11/9
  * Time: 9:09
  */
+/** @var \app\models\Shop $shop */
 defined('YII_ENV') or exit('Access Denied');
 $urlManager = Yii::$app->urlManager;
 $this->title = '编辑门店';
@@ -24,6 +25,23 @@ $this->params['active_nav_group'] = 1;
                     </div>
                     <div class="col-9">
                         <input class="form-control" type="text" name="name" value="<?= $shop->name ?>">
+                    </div>
+                </div>
+                <div class="form-group row">
+                    <div class="col-3 text-right">
+                        <label class=" col-form-label required">经营人：</label>
+                    </div>
+                    <div class="col-9">
+                        <div class="upload-group multiple short-row">
+                            <div class="input-group">
+                                <input class="form-control file-input" readonly type="text" id="user_id_text" value="<?= $shop->user->nickname ?>">
+                                <input name="user_id" type="hidden" id="user_id" value="<?= $shop->user_id ?>" />
+                                <span class="input-group-btn">
+                                        <a class="btn btn-secondary" href="javascript:" data-toggle="modal" data-target="#edit"
+                                           data-backdrop="static">选择用户</a>
+                                    </span>
+                            </div>
+                        </div>
                     </div>
                 </div>
                 <div class="form-group row">
@@ -62,7 +80,7 @@ $this->params['active_nav_group'] = 1;
                 </div>
                 <div class="form-group row">
                     <div class="col-3 text-right">
-                        <label class="col-form-label required">门店大图：</label>
+                        <label class="col-form-label">门店大图：</label>
                     </div>
                     <div class="col-9">
                         <?php if ($shop->shopPic) : ?>
@@ -117,7 +135,7 @@ $this->params['active_nav_group'] = 1;
                 </div>
                 <div class="form-group row">
                     <div class="col-3 text-right">
-                        <label class="col-form-label required">门店小图：</label>
+                        <label class="col-form-label ">门店小图：</label>
                     </div>
                     <div class="col-9">
 
@@ -206,6 +224,49 @@ $this->params['active_nav_group'] = 1;
             </div>
         </div>
     </div>
+    <div id="app">
+        <!-- 设置核销员 -->
+        <div class="modal fade" id="edit" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
+             aria-hidden="true">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="exampleModalLabel">设置核销员</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body">
+                            <div class="form-group">
+                                <div class="input-group">
+                                    <input class="form-control keyword" placeholder="输入昵称查找">
+                                    <input class="form-control order-id" type="hidden">
+                                    <span class="input-group-btn">
+                                    <button v-on:click="showKeyword()" class="btn btn-info">
+                                        查找
+                                    </button>
+                                </span>
+                                </div>
+                            </div>
+                            <div style="max-height:400px;overflow: auto">
+                                <table class="table table-bordered">
+                                    <tr v-for="(item,index) in show_user_list">
+                                        <td>{{item.id}}</td>
+                                        <td>{{item.nickname}}</td>
+                                        <td>
+                                            <a class="btn btn-primary btn-sm send" href="javascript:" :data-index="item.id" :data-text="item.nickname">设为经营人</a>
+                                        </td>
+                                    </tr>
+                                </table>
+                            </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">关闭</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
 </div>
 
 <script src="<?= Yii::$app->request->baseUrl ?>/statics/ueditor/ueditor.config.js"></script>
@@ -217,6 +278,39 @@ $this->params['active_nav_group'] = 1;
         saveInterval: 1000 * 3600,
         enableContextMenu: false,
         autoHeightEnabled: false,
+    });
+</script>
+<script>
+    var app = new Vue({
+        el: "#app",
+        data: {
+            user_list:<?= $user_list ?>,
+            show_user_list:<?=$user_list?>,
+            edit_user_id: "-1",
+        },
+        methods: {
+            //关键字查询
+            showKeyword: function () {
+                var _self = this;
+                var keyword = $.trim($('.keyword').val());
+                if (keyword == "") {
+                    _self.show_user_list = _self.user_list;
+                    return;
+                }
+                _self.show_user_list = [];
+                $.ajax({
+                    url: '<?=$urlManager->createUrl(['mch/user/get-user'])?>',
+                    dataType: 'json',
+                    type: 'get',
+                    data: {
+                        keyword: keyword
+                    },
+                    success: function (res) {
+                        _self.show_user_list = res;
+                    }
+                });
+            }
+        }
     });
 </script>
 <script>
@@ -291,4 +385,12 @@ $this->params['active_nav_group'] = 1;
     $(document).on('click', '.search', function () {
         searchKeyword();
     })
+    $(document).on('click', '.send', function () {
+        var a = $(this);
+        var index = $(this).data('index');
+        var text = $(this).data('text');
+        $('#user_id').val(index);
+        $('#user_id_text').val(text);
+        $('#edit').modal('hide');
+    });
 </script>

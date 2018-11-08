@@ -14,6 +14,7 @@ use app\models\common\admin\store\CommonAppDisabled;
 use app\models\common\admin\store\CommonStoreUpload;
 use app\models\common\CommonDistrict;
 use app\modules\mch\models\PickLinkForm;
+use app\modules\mch\models\UserListForm;
 use app\modules\mch\models\WxForm;
 use app\utils\FileHelper;
 use app\models\AppNavbar;
@@ -1198,6 +1199,11 @@ class StoreController extends Controller
             $form->attributes = \Yii::$app->request->post();
             return $form->save();
         }
+        $form = new UserListForm();
+        $form->attributes = \Yii::$app->request->get();
+        $form->store_id = $this->store->id;
+        $data = $form->search();
+        $data_list = $form->getUser();
         foreach ($shop as $index => $value) {
             if (in_array($index, ['content'])) {
                 continue;
@@ -1206,6 +1212,7 @@ class StoreController extends Controller
         }
         return $this->render('shop-edit', [
             'shop' => $shop,
+            'user_list' => \Yii::$app->serializer->encode($data_list),
         ]);
     }
 

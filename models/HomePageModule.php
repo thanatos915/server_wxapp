@@ -52,6 +52,11 @@ class HomePageModule extends Model
                 'display_name' => '领券中心',
             ],
             [
+                'key' => 'dingshi',
+                'name' => 'dingshi',
+                'display_name' => '定时购',
+            ],
+            [
                 'key' => 'miaosha',
                 'name' => 'miaosha',
                 'display_name' => '整点秒杀',

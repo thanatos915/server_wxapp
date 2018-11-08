@@ -12,6 +12,7 @@ use app\models\Order;
 use app\models\Shop;
 use app\models\ShopPic;
 use app\models\Store;
+use app\models\User;
 use app\models\UserCard;
 use yii\data\Pagination;
 
@@ -24,6 +25,7 @@ class ShopForm extends MchModel
     public $shop;
     public $limit;
 
+    public $user_id;
     public $name;
     public $mobile;
     public $address;
@@ -39,7 +41,8 @@ class ShopForm extends MchModel
     public function rules()
     {
         return [
-            [['name', 'mobile', 'address', 'latitude', 'longitude'], 'required'],
+            [['name', 'mobile', 'address', 'latitude', 'longitude', 'user_id'], 'required'],
+            ['user_id', 'integer'],
             [['name', 'mobile', 'address', 'latitude', 'longitude', 'cover_url', 'pic_url', 'shop_time'], 'string', 'max' => 255],
             [['name', 'mobile', 'address', 'cover_url', 'pic_url', 'content', 'shop_time'], 'trim'],
             [['score'], 'integer', 'min' => 1, 'max' => 5],
@@ -120,6 +123,7 @@ class ShopForm extends MchModel
             $list[$index]['card_count'] = UserCard::find()->where([
                 'store_id' => $this->store_id, 'is_delete' => 0, 'shop_id' => $value['id']
             ])->count();
+            $list[$index]['user'] = User::find()->where(['id' => $value['user_id']])->one();
         }
         return [
             'row_count' => $count,

@@ -400,6 +400,26 @@ class Menu
                 ],
             ],
             [
+                'name' => '门店管理',
+                'is_menu' => true,
+                'route' => 'mch/store/sop',
+                'icon' => 'icon-barrage',
+                'children' => [
+                    [
+                        'name' => '门店列表',
+                        'is_menu' => true,
+                        'route' => 'mch/store/shop',
+                        'sub' => [
+                            [
+                                'name' => '门店(S|U)',
+                                'is_menu' => false,
+                                'route' => 'mch/store/shop-edit',
+                            ]
+                        ],
+                    ],
+                ],
+            ],
+            [
                 'name' => '订单管理',
                 'is_menu' => true,
                 'route' => 'mch/order/index',
@@ -783,6 +803,7 @@ class Menu
                             ]
                         ]
                     ],
+                    /*
                     [
                         'name' => '门店',
                         'is_menu' => true,
@@ -817,6 +838,7 @@ class Menu
                             ],
                         ]
                     ],
+                    */
                 ],
             ],
             [

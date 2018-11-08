@@ -10,6 +10,7 @@ use Codeception\PHPUnit\ResultPrinter\HTML;
  *
  * @property integer $id
  * @property integer $store_id
+ * @property integer $user_id
  * @property string $name
  * @property string $mobile
  * @property string $address
@@ -23,6 +24,7 @@ use Codeception\PHPUnit\ResultPrinter\HTML;
  * @property string $shop_time
  * @property string $content
  * @property integer $is_default
+ * @property User $user
  */
 class Shop extends \yii\db\ActiveRecord
 {
@@ -40,7 +42,7 @@ class Shop extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['store_id', 'is_delete', 'addtime', 'score', 'is_default'], 'integer'],
+            [['store_id', 'user_id', 'is_delete', 'addtime', 'score', 'is_default'], 'integer'],
             [['longitude', 'latitude', 'cover_url', 'pic_url', 'content'], 'string'],
             [['name', 'mobile', 'address', 'shop_time'], 'string', 'max' => 255],
         ];
@@ -54,6 +56,7 @@ class Shop extends \yii\db\ActiveRecord
         return [
             'id' => 'ID',
             'store_id' => 'Store ID',
+            'user_id' => 'User ID',
             'name' => 'Name',
             'mobile' => 'Mobile',
             'address' => 'Address',
@@ -83,4 +86,10 @@ class Shop extends \yii\db\ActiveRecord
         $this->address = \yii\helpers\Html::encode($this->address);
         return parent::beforeSave($insert);
     }
+
+    public function getUser()
+    {
+        return $this->hasOne(User::className(), ['id' => 'user_id']);
+    }
+
 }

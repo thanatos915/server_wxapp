@@ -22,6 +22,7 @@ $this->params['active_nav_group'] = 1;
             <tr>
                 <th>ID</th>
                 <th>门店名称</th>
+                <th>经营人</th>
                 <th>联系方式</th>
                 <th>门店地址</th>
                 <th>经纬度</th>
@@ -36,6 +37,7 @@ $this->params['active_nav_group'] = 1;
                 <tr>
                     <td><?= $item['id'] ?></td>
                     <td><?= $item['name'] ?></td>
+                    <td><?= $item['user']['nickname'] ?></td>
                     <td><?= $item['mobile'] ?></td>
                     <td><?= $item['address'] ?></td>
                     <td>
