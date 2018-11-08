@@ -69,6 +69,7 @@ use yii\db\ActiveQuery;
  * @property integer $type
  * @property string $share_price
  * @property integer $is_show
+ * @property Shop $shop
  */
 class Order extends \yii\db\ActiveRecord
 {

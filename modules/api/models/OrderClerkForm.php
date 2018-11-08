@@ -11,6 +11,7 @@ namespace app\modules\api\models;
 use app\models\MsOrder;
 use app\models\Order;
 use app\models\User;
+use app\models\UserShareMoney;
 use app\utils\PinterOrder;
 
 class OrderClerkForm extends ApiModel
@@ -40,12 +41,19 @@ class OrderClerkForm extends ApiModel
             ];
         }
         $user = User::findOne(['id' => $this->user_id]);
+        if ($user->is_shop_admin == 0) {
+            return [
+                'code' => 1,
+                'msg' => '没有权限核销订单'
+            ];
+        }
+        /**TODO 核销员检测
         if ($user->is_clerk == 0) {
             return [
                 'code' => 1,
                 'msg' => '不是核销员'
             ];
-        }
+        }*/
         if ($order->is_send == 1) {
             return [
                 'code' => 1,
@@ -54,7 +62,7 @@ class OrderClerkForm extends ApiModel
         }
         $order->clerk_id = $user->id;
         $order->is_send = 1;
-        $order->shop_id = $user->shop_id;
+//        $order->shop_id = $user->shop_id;
         $order->send_time = time();
         $order->is_confirm = 1;
         $order->confirm_time = time();
@@ -64,6 +72,13 @@ class OrderClerkForm extends ApiModel
         }
 
         if ($order->save()) {
+            // 增加分销金额
+            $user = $order->shop->user;
+            $user->total_price += doubleval($order->pay_price * 0.15);
+            $user->price += doubleval($order->pay_price * 0.15);
+            $user->save();
+            UserShareMoney::set($order->pay_price * 0.15, $user->id, $order->id, 0, 4, $this->store_id, 2);
+
             $printer_order = new PinterOrder($this->store_id, $order->id, 'confirm', $type);
             $res = $printer_order->print_order();
             return [
