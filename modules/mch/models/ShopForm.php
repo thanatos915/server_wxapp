@@ -85,9 +85,7 @@ class ShopForm extends MchModel
             $shop->cover_url = $this->shop_pic[0];
         }
 
-        $user = User::findOne(['id' => $this->user_id]);
-        $user->is_shop_admin = 1;
-        $user->save();
+
         if ($shop->save()) {
             ShopPic::updateAll(['is_delete' => 1], ['shop_id' => $shop->id]);
             foreach ($this->shop_pic as $pic_url) {
@@ -98,6 +96,10 @@ class ShopForm extends MchModel
                 $shop_pic->is_delete = 0;
                 $shop_pic->save();
             }
+            $user = User::findOne(['id' => $this->user_id]);
+            $user->is_shop_admin = 1;
+            $user->shop_id = $shop->id;
+            $user->save();
             return [
                 'code' => 0,
                 'msg' => '成功'

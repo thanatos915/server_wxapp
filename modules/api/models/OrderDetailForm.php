@@ -30,7 +30,7 @@ class OrderDetailForm extends ApiModel
     public function rules()
     {
         return [
-            [['order_id'], 'required'],
+//            [['order_id'], 'required'],
         ];
     }
 
@@ -39,13 +39,14 @@ class OrderDetailForm extends ApiModel
         if (!$this->validate()) {
             return $this->errorResponse;
         }
-        $order = Order::findOne([
+        $order = Order::find()->andFilterWhere([
             'store_id' => $this->store_id,
             'user_id' => $this->user_id,
             'id' => $this->order_id,
+            'order_no' => $this->order_no,
             'is_delete' => 0,
             'is_recycle'=> 0,
-        ]);
+        ])->one();
         if (!$order) {
             return [
                 'code' => 1,

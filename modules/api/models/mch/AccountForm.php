@@ -23,6 +23,7 @@ class AccountForm extends ApiModel
     public function search()
     {
         $mch = Mch::findOne($this->mch_id);
+        var_dump($mch);exit;
         if (!$mch) {
             return [
                 'code' => 1,

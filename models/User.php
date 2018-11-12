@@ -40,6 +40,7 @@ use yii\web\IdentityInterface;
  * @property string $wechat_platform_open_id
  * @property integer $platform
  * @property integer $is_shop_admin
+ * @property Shop $shop
  */
 class User extends \yii\db\ActiveRecord implements IdentityInterface
 {

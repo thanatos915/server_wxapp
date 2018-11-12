@@ -1175,6 +1175,7 @@ class StoreController extends Controller
         }*/
 
         $shop->user->is_shop_admin = 0;
+        $shop->user->shop_id = 0;
         $shop->user->save();
         $shop->is_delete = 1;
         if ($shop->save()) {

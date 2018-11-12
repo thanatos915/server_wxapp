@@ -418,6 +418,11 @@ class Menu
                         ],
                     ],
                     [
+                        'name' => '提现设置',
+                        'is_menu' => true,
+                        'route' => 'mch/share/basic',
+                    ],
+                    [
                         'name' => '佣金提现',
                         'is_menu' => true,
                         'route' => 'mch/share/cash',
@@ -636,100 +641,100 @@ class Menu
                     ],
                 ],
             ],
-            /*
-            [
-                'key' => 'share',
-                'name' => '分销中心',
-                'is_menu' => true,
-                'route' => 'mch/share/index',
-                'icon' => 'icon-jiegou',
-                'children' => [
-                    [
-                        'name' => '分销商',
-                        'is_menu' => true,
-                        'route' => 'mch/share/index',
-                        'action' => [
-                            [
-                                'name' => '分销商添加备注',
-                                'route' => 'mch/share/seller-comments'
-                            ],
-                            [
-                                'name' => '分销商佣金设置',
-                                'route' => 'mch/share/setting'
-                            ],
-                            [
-                                'name' => '分销商批量设置',
-                                'route' => 'mch/share/batch'
-                            ],
-                            [
-                                'name' => '分销商基础设置',
-                                'route' => 'mch/share/basic'
-                            ],
-                            [
-                                'name' => '分销商申请审核',
-                                'route' => 'mch/share/status'
-                            ],
-                            [
-                                'name' => '分销商确认打款',
-                                'route' => 'mch/share/confirm'
-                            ],
-                            [
-                                'name' => '设置推广海报',
-                                'route' => 'mch/share/qrcode'
-                            ],
-                            [
-                                'name' => '分销商删除',
-                                'route' => 'mch/share/del'
-                            ],
-                            [
-                                'name' => '分销商自定义设置',
-                                'route' => 'mch/share/custom'
-                            ],
-                        ]
-                    ],
-                    [
-                        'name' => '分销订单',
-                        'is_menu' => true,
-                        'route' => 'mch/share/order',
-                    ],
-
-                    [
-                        'name' => '分销提现',
-                        'is_menu' => true,
-                        'route' => 'mch/share/cash',
-                    ],
-                    [
-                        'name' => '分销设置',
-                        'is_menu' => true,
-                        'route' => 'mch/share/basic',
-                        'children' => [
-                            [
-                                'name' => '基础设置',
-                                'is_menu' => true,
-                                'route' => 'mch/share/basic',
-                                'sub' => [
-                                    [
-                                        'name' => '分享二维码',
-                                        'is_menu' => false,
-                                        'route' => 'mch/share/qrcode'
-                                    ],
-                                ]
-                            ],
-                            [
-                                'name' => '佣金设置',
-                                'is_menu' => true,
-                                'route' => 'mch/share/setting'
-                            ],
-                            [
-                                'name' => '自定义设置',
-                                'is_menu' => true,
-                                'route' => 'mch/share/custom'
-                            ],
-                        ]
-                    ],
-                ],
-            ],
-            */
+            /**
+             * [
+             * 'key' => 'share',
+             * 'name' => '分销中心',
+             * 'is_menu' => true,
+             * 'route' => 'mch/share/index',
+             * 'icon' => 'icon-jiegou',
+             * 'children' => [
+             * [
+             * 'name' => '分销商',
+             * 'is_menu' => true,
+             * 'route' => 'mch/share/index',
+             * 'action' => [
+             * [
+             * 'name' => '分销商添加备注',
+             * 'route' => 'mch/share/seller-comments'
+             * ],
+             * [
+             * 'name' => '分销商佣金设置',
+             * 'route' => 'mch/share/setting'
+             * ],
+             * [
+             * 'name' => '分销商批量设置',
+             * 'route' => 'mch/share/batch'
+             * ],
+             * [
+             * 'name' => '分销商基础设置',
+             * 'route' => 'mch/share/basic'
+             * ],
+             * [
+             * 'name' => '分销商申请审核',
+             * 'route' => 'mch/share/status'
+             * ],
+             * [
+             * 'name' => '分销商确认打款',
+             * 'route' => 'mch/share/confirm'
+             * ],
+             * [
+             * 'name' => '设置推广海报',
+             * 'route' => 'mch/share/qrcode'
+             * ],
+             * [
+             * 'name' => '分销商删除',
+             * 'route' => 'mch/share/del'
+             * ],
+             * [
+             * 'name' => '分销商自定义设置',
+             * 'route' => 'mch/share/custom'
+             * ],
+             * ]
+             * ],
+             * [
+             * 'name' => '分销订单',
+             * 'is_menu' => true,
+             * 'route' => 'mch/share/order',
+             * ],
+             *
+             * [
+             * 'name' => '分销提现',
+             * 'is_menu' => true,
+             * 'route' => 'mch/share/cash',
+             * ],
+             * [
+             * 'name' => '分销设置',
+             * 'is_menu' => true,
+             * 'route' => 'mch/share/basic',
+             * 'children' => [
+             * [
+             * 'name' => '基础设置',
+             * 'is_menu' => true,
+             * 'route' => 'mch/share/basic',
+             * 'sub' => [
+             * [
+             * 'name' => '分享二维码',
+             * 'is_menu' => false,
+             * 'route' => 'mch/share/qrcode'
+             * ],
+             * ]
+             * ],
+             * [
+             * 'name' => '佣金设置',
+             * 'is_menu' => true,
+             * 'route' => 'mch/share/setting'
+             * ],
+             * [
+             * 'name' => '自定义设置',
+             * 'is_menu' => true,
+             * 'route' => 'mch/share/custom'
+             * ],
+             * ]
+             * ],
+             * ],
+             * ],
+             */
             [
                 'name' => '内容管理',
                 'is_menu' => true,
@@ -1033,7 +1038,7 @@ class Menu
                                     [
                                         'name' => '秒杀商品发货',
                                         'route' => 'mch/miaosha/order/send'
-                                    ],             
+                                    ],
                                     [
                                         'name' => '秒杀商品详情',
                                         'route' => 'mch/miaosha/order/detail'
@@ -1587,8 +1592,8 @@ class Menu
                                 'route' => "mch/bargain/order/index",
                                 'sub' => [
                                     [
-                                        'is_menu'=>false,
-                                        'name'=>'订单详情',
+                                        'is_menu' => false,
+                                        'name' => '订单详情',
                                         'route' => 'mch/bargain/order/detail'
                                     ]
                                 ]

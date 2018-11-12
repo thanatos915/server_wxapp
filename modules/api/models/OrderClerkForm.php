@@ -54,7 +54,7 @@ class OrderClerkForm extends ApiModel
                 'msg' => '不是核销员'
             ];
         }*/
-        if ($order->is_send == 1) {
+        if ($order->is_confirm== 1) {
             return [
                 'code' => 1,
                 'msg' => '订单已核销'

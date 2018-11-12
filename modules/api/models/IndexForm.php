@@ -100,32 +100,10 @@ class IndexForm extends ApiModel
         $cat_list_cache_key = md5('cat_list_cache_key&store_id=' . $this->store_id . $cat_str);
         $cat_list = \Yii::$app->cache->get($cat_list_cache_key);
         if (!$cat_list) {
-            $query = Cat::find()->where([
-                'is_delete' => 0,
-                'parent_id' => 0,
-                'store_id' => $this->store_id,
-            ]);
-            if ($cat_str != 'all') {
-                $query->andWhere(['id' => $cat_id]);
-            }
-            $cat_list = $query->orderBy('sort ASC')->asArray()->all();
-            foreach ($cat_list as $i => $cat) {
-                $cat_list[$i]['page_url'] = '/pages/list/list?cat_id=' . $cat['id'];
-                $cat_list[$i]['open_type'] = 'navigate';
-                $cat_list[$i]['cat_pic'] = $cat['pic_url'];
-                $goods_list_form = new GoodsListForm();
-                $goods_list_form->store_id = $this->store_id;
-                $goods_list_form->cat_id = $cat['id'];
-                $goods_list_form->limit = $store->cat_goods_count;
-                $goods_list_form_res = $goods_list_form->search();
-                if ($goods_list_form_res->code == 0) {
-                    $goods_list_data = new \ArrayObject($goods_list_form_res->data, \ArrayObject::ARRAY_AS_PROPS);
-                    $goods_list = $goods_list_data['list'];
-                } else {
-                    $goods_list = [];
-                }
-                $cat_list[$i]['goods_list'] = $goods_list;
-            }
+            $form = new DingshiCatListForm();
+            $form->attributes = \Yii::$app->request->get();
+            $form->store_id = $this->store->id;
+            $cat_list = $form->search();
             \Yii::$app->cache->set($cat_list_cache_key, $cat_list, 60 * 10);
         }
 

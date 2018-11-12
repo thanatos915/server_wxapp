@@ -17,6 +17,7 @@ use app\models\Option;
 use app\models\Order;
 use app\models\Setting;
 use app\models\Share;
+use app\models\Shop;
 use app\models\Store;
 use app\models\User;
 use app\models\UserAuthLogin;
@@ -77,11 +78,15 @@ class UserController extends Controller
             'parent' => $share ? ($share->name ? $share->name : $parent->nickname) : "总店",
             'id' => \Yii::$app->user->identity->id,
             'is_clerk' => \Yii::$app->user->identity->is_clerk,
+            'is_shop_admin' => \Yii::$app->user->identity->is_shop_admin,
             'level' => $level,
             'level_name' => $now_level ? $now_level->name : "普通用户",
             'integral' => \Yii::$app->user->identity->integral,
             'money' => \Yii::$app->user->identity->money
         ];
+//        if (\Yii::$app->user->identity->is_shop_admin) {
+//            $user_info['shop'] = Shop::findOne(['user_id' => \Yii::$app->user->identity->id]);
+//        }
         $next_level = Level::find()->where(['store_id' => $this->store->id, 'is_delete' => 0, 'status' => 1])
             ->andWhere(['>', 'level', $level])->orderBy(['level' => SORT_ASC, 'id' => SORT_DESC])->asArray()->one();
 
