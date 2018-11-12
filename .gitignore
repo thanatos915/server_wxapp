@@ -6,4 +6,8 @@ install.lock.php
 config/ind_db.php
 .env
 .idea
-/vendor
+/runtime/cache
+/runtime/debug
+/runtime/logs
+/runtime/pem
+/runtime/gii-2.0.12
