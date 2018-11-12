@@ -6126,10 +6126,6 @@ CREATE TABLE `hjmall_mch_option` (
   PRIMARY KEY (`id`)
 ) DEFAULT CHARSET=utf8;
 
-ALTER TABLE `hjmall_mch`
-ADD COLUMN `longitude`  varchar(255) NOT NULL DEFAULT 0 COMMENT '经度',
-ADD COLUMN `latitude`  varchar(255) NOT NULL DEFAULT 0 COMMENT '纬度';
-
 -- 2.9.0
 
 ALTER TABLE `hjmall_cash` ADD COLUMN `service_charge`  decimal(11,2) NOT NULL DEFAULT 0 COMMENT '提现手续费';
@@ -6160,3 +6156,7 @@ ALTER TABLE `hjmall_store` ADD is_share_price tinyint(1) NOT NULL DEFAULT '1' CO
 ALTER TABLE `hjmall_store` ADD COLUMN `is_member` smallint(1) NULL DEFAULT 0 COMMENT '是否购买会员 0不支持 1支持';
 ALTER TABLE `hjmall_level` ADD COLUMN `synopsis`  longtext NULL COMMENT '会员权益(禁用)';
 ALTER TABLE `hjmall_topic` ADD COLUMN `qrcode_pic` longtext NULL COMMENT '海报分享图';
+
+ALTER TABLE `hjmall_mch`
+ADD COLUMN `longitude`  varchar(255) NOT NULL DEFAULT 0 COMMENT '经度',
+ADD COLUMN `latitude`  varchar(255) NOT NULL DEFAULT 0 COMMENT '纬度';
