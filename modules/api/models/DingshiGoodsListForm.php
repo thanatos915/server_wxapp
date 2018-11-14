@@ -11,6 +11,7 @@ namespace app\modules\api\models;
 
 use app\hejiang\ApiResponse;
 use app\models\Cat;
+use app\models\Dingshi;
 use app\models\DingshiGoods;
 use app\models\Goods;
 use app\models\GoodsCat;
@@ -146,6 +147,9 @@ class DingshiGoodsListForm extends ApiModel
         if (!$goods_id) {
             return new ApiResponse(1, 'error');
         }
+
+        $dingshi = Dingshi::find()->where(['store_id' => $this->store_id])->one();
+
         $cat_ids = [];
 
         $goods = Goods::find()->select('*')->where(['store_id' => $this->store_id, 'is_delete' => 0, 'type' => get_plugin_type()])->andWhere('id=:id', [':id' => $goods_id])->one();
@@ -223,7 +227,7 @@ class DingshiGoodsListForm extends ApiModel
                 $list[$i]['pic_url'] = Goods::getGoodsPicStatic($item['id'])->pic_url;
             }
             $list[$i]['sales'] = $this->numToW($item['num'] + $item['virtual_sales']) . $item['unit'];
-
+            $list[$i]['end_time'] = strtotime(date('Y-m-d') . $dingshi->end_time . ':00:00');
         }
         $data = [
             'row_count' => $count,
