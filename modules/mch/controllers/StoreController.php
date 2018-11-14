@@ -13,6 +13,7 @@ use app\hejiang\ApiCode;
 use app\models\common\admin\store\CommonAppDisabled;
 use app\models\common\admin\store\CommonStoreUpload;
 use app\models\common\CommonDistrict;
+use app\models\Dingshi;
 use app\modules\mch\models\PickLinkForm;
 use app\modules\mch\models\UserListForm;
 use app\modules\mch\models\WxForm;
@@ -1154,6 +1155,71 @@ class StoreController extends Controller
             'pagination' => $arr['pagination'],
             'list' => $arr['list'],
         ]);
+    }
+
+    /**
+     * 店铺配货详情
+     * @param null $id
+     * @author thanatos <thanatos915@163.com>
+     */
+    public function actionShopSend($id = null)
+    {
+        $shop = Shop::findOne(['id' => $id, 'store_id' => $this->store->id, 'is_delete' => 0]);
+        $dingshi = Dingshi::findOne(['store_id' => $this->store->id]);
+        // 检测当前时间
+        $time = date('H');
+        if ($dingshi->end_time < $time && $time <= 24) {
+            $start_date = date('Y-m-d');
+            $end_date = strtotime('+1 days');
+        } else {
+            $start_date = date('Y-m-d', strtotime('-1 days'));
+            $end_date = date('Y-m-d');
+        }
+        // 订单开始时间
+        $start = strtotime($start_date);
+        // 订单结束时间
+        $end = strtotime($end_date);
+        $query = Order::find();
+        $query->andWhere(['shop_id' => $shop->id])
+            ->andWhere(['and', ['>=', 'addtime', $start], ['<', 'addtime', $end]])
+            ->andWhere(['is_pay' => 1]);
+
+        $order_list = $query->all();
+
+        $goods = [];
+        foreach ($order_list as $order) {
+            foreach ($order->goods as $good) {
+                $goods[$good->id]['name'] = $good->name;
+            }
+        }
+
+        foreach ($order_list as $order) {
+            foreach ($order->detail as $detail) {
+                // 增加购买数量
+                $goods[$detail->goods_id]['num'] += $detail->num;
+                // 增加购买记录
+                if (is_array($goods[$detail->goods_id]['buys'][$order->user_id])) {
+                    $goods[$detail->goods_id]['buys'][$order->user_id]['num'] += 1;
+                } else {
+                    $goods[$detail->goods_id]['buys'][$order->user_id] = [
+                        'username' => $order->name,
+                        'num' => $detail->num
+                    ];
+                }
+            }
+        }
+
+        $list = [];
+        foreach ($goods as $v) {
+            $list[] = $v;
+        }
+
+        return $this->render('shop-send.php', [
+            'start' => $start_date,
+            'shop' => $shop,
+            'list' => $list
+        ]);
+
     }
 
     public function actionShopDel($id = null)

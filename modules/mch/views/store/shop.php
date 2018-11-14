@@ -65,6 +65,8 @@ $this->params['active_nav_group'] = 1;
                     </td>
                     <td>
                         <a class="btn btn-primary btn-sm"
+                           href="<?= $urlManager->createUrl(['mch/store/shop-send', 'id' => $item['id']]) ?>">今日配货详情</a>
+                        <a class="btn btn-primary btn-sm"
                            href="<?= $urlManager->createUrl(['mch/store/shop-edit', 'id' => $item['id']]) ?>">修改</a>
                         <a class="btn btn-danger btn-sm del" href="javascript:"
                            data-url="<?= $urlManager->createUrl(['mch/store/shop-del', 'id' => $item['id']]) ?>"

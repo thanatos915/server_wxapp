@@ -48,12 +48,13 @@ class OrderListForm extends MchModel
     public $type;
 
     public $platform;//所属平台
+    public $shop;//所属门店
 
     public function rules()
     {
         return [
             [['keyword',], 'trim'],
-            [['status', 'is_recycle', 'page', 'limit', 'user_id', 'is_offline', 'clerk_id', 'shop_id', 'keyword_1'], 'integer'],
+            [['status', 'is_recycle', 'page', 'limit', 'user_id', 'is_offline', 'clerk_id', 'shop_id', 'keyword_1', 'shop'], 'integer'],
             [['status',], 'default', 'value' => -1],
             [['page',], 'default', 'value' => 1],
             //[['limit',], 'default', 'value' => 20],
@@ -140,6 +141,10 @@ class OrderListForm extends MchModel
 
         if (isset($this->platform)) {
             $query->andWhere(['u.platform' => $this->platform]);
+        }
+
+        if ($this->shop) {
+            $query->andWhere(['o.shop_id' => $this->shop]);
         }
 
         if ($this->keyword) {//关键字查找

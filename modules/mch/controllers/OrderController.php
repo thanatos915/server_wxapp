@@ -26,6 +26,7 @@ use app\modules\mch\models\OrderRefundForm;
 use app\modules\mch\models\OrderRefundListForm;
 use app\modules\mch\models\OrderSendForm;
 use app\modules\mch\models\PrintForm;
+use app\modules\mch\models\ShopForm;
 use app\modules\mch\models\StoreDataForm;
 use app\modules\mch\extensions\Export;
 use yii\web\UploadedFile;
@@ -65,6 +66,10 @@ class OrderController extends Controller
         if ($shop_id) {
             $shop = Shop::findOne(['store_id' => $this->store->id, 'id' => $shop_id]);
         }
+        // 门店列表
+        $form = new ShopForm();
+        $form->store_id = $this->store->id;
+        $shopList = $form->getList();
 
         return $this->render('index', [
             'row_count' => $data['row_count'],
@@ -76,6 +81,7 @@ class OrderController extends Controller
             'clerk' => $clerk,
             'shop' => $shop,
             'exportList' => \Yii::$app->serializer->encode($exportList),
+            'shopList' => $shopList['list']
         ]);
     }
 

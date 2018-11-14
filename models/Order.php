@@ -70,6 +70,8 @@ use yii\db\ActiveQuery;
  * @property string $share_price
  * @property integer $is_show
  * @property Shop $shop
+ * @property Goods[] $goods
+ * @property OrderDetail[] $detail
  */
 class Order extends \yii\db\ActiveRecord
 {
@@ -255,6 +257,10 @@ class Order extends \yii\db\ActiveRecord
         return $this->hasMany(OrderDetail::className(), ['order_id' => 'id']);
     }
 
+    /**
+     * @return Goods
+     * @author thanatos <thanatos915@163.com>
+     */
     public function getGoods()
     {
         return $this->hasMany(Goods::className(), ['id' => 'goods_id'])->alias('g')

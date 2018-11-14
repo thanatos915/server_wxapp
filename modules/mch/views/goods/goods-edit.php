@@ -422,7 +422,7 @@ if (!$returnUrl) {
                                     </span>
                                 </div>
                                 <div class="upload-preview text-center upload-preview">
-                                    <span class="upload-preview-tip">325&times;325</span>
+                                    <span class="upload-preview-tip">750&times;320</span>
                                     <img class="upload-preview-img" src="<?= $goods->cover_pic ?>">
                                 </div>
                             </div>

@@ -414,7 +414,12 @@ class Menu
                                 'name' => '门店(S|U)',
                                 'is_menu' => false,
                                 'route' => 'mch/store/shop-edit',
-                            ]
+                            ],
+                            [
+                            'name' => '提货详情',
+                            'is_menu' => false,
+                            'route' => 'mch/store/shop-send',
+                        ]
                         ],
                     ],
                     [

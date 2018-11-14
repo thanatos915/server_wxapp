@@ -11,6 +11,7 @@ defined('YII_ENV') or exit('Access Denied');
 use yii\widgets\LinkPager;
 
 /* @var \app\models\User $user */
+/** @var \app\models\Shop[] $shopList */
 
 $urlManager = Yii::$app->urlManager;
 $statics = Yii::$app->request->baseUrl . '/statics';
@@ -184,7 +185,7 @@ $urlPlatform = Yii::$app->requestedRoute;
                                    href="javascript:">批量导出</a>
                                 <a class="btn btn-secondary del"
                                    href="javascript:"
-                                   data-url="<?= $urlManager->createUrl([$urlStr.'/delete-all']) ?>"
+                                   data-url="<?= $urlManager->createUrl([$urlStr . '/delete-all']) ?>"
                                    data-content="是否清空回收站？">清空回收站</a>
                             </div>
                         </div>
@@ -222,6 +223,31 @@ $urlPlatform = Yii::$app->requestedRoute;
                                    href="<?= $urlManager->createUrl([$urlPlatform, 'platform' => 1]) ?>">支付宝</a>
                                 <a class="dropdown-item"
                                    href="<?= $urlManager->createUrl([$urlPlatform, 'platform' => 0]) ?>">微信</a>
+                            </div>
+                        </div>
+                        &nbsp;&nbsp;&nbsp;&nbsp;
+                        <label class="col-form-label">自提门店：</label>
+                        <div class="dropdown float-right">
+                            <button class="btn btn-secondary dropdown-toggle" type="button"
+                                    data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                <?php
+                                $isEcho = false;
+                                foreach ($shopList as $k => $v) {
+                                    if($_GET['shop'] == $v['id']) {
+                                        $isEcho = true;
+                                        echo $v['name'];
+                                    }
+                                }
+                                if ($isEcho === false) {
+                                    echo '全部门店';
+                                }
+                                ?>
+                            </button>
+                            <div class="dropdown-menu" style="min-width:8rem">
+                                <?php foreach ($shopList as $k => $v) { ?>
+                                    <a class="dropdown-item"
+                                       href="<?= $urlManager->createUrl([$urlPlatform, 'shop' => $v['id']]) ?>"><?= $v['name'] ?></a>
+                                <?php } ?>
                             </div>
                         </div>
                     </div>
@@ -342,11 +368,11 @@ $urlPlatform = Yii::$app->requestedRoute;
                                 <?php if ($order_item['is_delete'] == 0) : ?>
                                     <span>
                                         <a class="btn btn-sm btn-info apply-status-btn"
-                                           href="<?= $urlManager->createUrl([$urlStr.'/apply-delete-status', 'id' => $order_item['id'], 'status' => 1]) ?>">同意取消</a>
+                                           href="<?= $urlManager->createUrl([$urlStr . '/apply-delete-status', 'id' => $order_item['id'], 'status' => 1]) ?>">同意取消</a>
                                     </span>
                                     <span>
                                         <a class="btn btn-sm refuse btn-danger  apply-status-btn"
-                                           href="<?= $urlManager->createUrl([$urlStr.'/apply-delete-status', 'id' => $order_item['id'], 'status' => 0]) ?>">拒绝取消</a>
+                                           href="<?= $urlManager->createUrl([$urlStr . '/apply-delete-status', 'id' => $order_item['id'], 'status' => 0]) ?>">拒绝取消</a>
                                     </span>
                                 <?php endif; ?>
                             <?php endif; ?>
@@ -409,9 +435,11 @@ $urlPlatform = Yii::$app->requestedRoute;
                             <?php endforeach; ?>
                         </td>
                         <td class="order-tab-2">
-                            <div class='titleColor'>总金额：<span style="color:blue;"><?= $order_item['total_price'] ?></span>元
+                            <div class='titleColor'>总金额：<span
+                                        style="color:blue;"><?= $order_item['total_price'] ?></span>元
                                 <?php if ($order_item['express_price_1']) : ?>
-                                    (含运费：<span style="color:green;"><?= $order_item['express_price_1'] ?></span>元)</span>
+                                    (含运费：<span
+                                            style="color:green;"><?= $order_item['express_price_1'] ?></span>元)</span>
                                     <span class="text-danger">(包邮，运费减免)</span>
                                 <?php else : ?>
                                     (运费：<span style="color:green;"><?= $order_item['express_price'] ?></span>元)</span>
@@ -439,7 +467,9 @@ $urlPlatform = Yii::$app->requestedRoute;
                                 </span>
                             <?php endif; ?>
                             <?php if ($order_item['discount'] && $order_item['discount'] != 10) : ?>
-                                <div class='titleColor'>会员折扣：<span style="color:red;"><?= $order_item['discount'] ?></span>折</div>
+                                <div class='titleColor'>会员折扣：<span
+                                            style="color:red;"><?= $order_item['discount'] ?></span>折
+                                </div>
                             <?php endif; ?>
                             <?php if ($order_item['is_pay'] == 0 && $order_item['is_cancel'] == 0 && $order_item['is_send'] == 0) : ?>
                                 <div>
@@ -485,19 +515,20 @@ $urlPlatform = Yii::$app->requestedRoute;
                         </td>
                         <td class="order-tab-5">
                             <?php if (($order_item['is_pay'] == 1 || $order_item['pay_type'] == 2) && $order_item['is_confirm'] != 1) : ?>
-                                <div>
-                                    <a class="btn btn-sm btn-primary send-btn mt-2" href="javascript:"
-                                       data-order-id="<?= $order_item['id'] ?>" data-express='<?= $order_item['express'] ?>' data-express-no='<?= $order_item['express_no'] ?>'><?= ($order_item['is_send'] == 1) ? "修改快递单号" : "发货" ?></a>
-                            <?php endif; ?>
-                            <?php if (($order_item['is_pay'] == 1 || $order_item['pay_type'] == 2) && $order_item['is_offline'] == 1 && $order_item['is_send'] != 1) : ?>
-                                    <a class="btn btn-sm btn-primary clerk-btn mt-2" href="javascript:"
-                                       data-order-id="<?= $order_item['id'] ?>">核销</a>
-                                </div>
-                            <?php endif; ?>
+                            <div>
+                                <a class="btn btn-sm btn-primary send-btn mt-2" href="javascript:"
+                                   data-order-id="<?= $order_item['id'] ?>" data-express='<?= $order_item['express'] ?>'
+                                   data-express-no='<?= $order_item['express_no'] ?>'><?= ($order_item['is_send'] == 1) ? "修改快递单号" : "发货" ?></a>
+                                <?php endif; ?>
+                                <?php if (($order_item['is_pay'] == 1 || $order_item['pay_type'] == 2) && $order_item['is_offline'] == 1 && $order_item['is_send'] != 1) : ?>
+                                <a class="btn btn-sm btn-primary clerk-btn mt-2" href="javascript:"
+                                   data-order-id="<?= $order_item['id'] ?>">核销</a>
+                            </div>
+                        <?php endif; ?>
                             <div>
                                 <?php if ($order_item['is_recycle'] == 1) : ?>
                                     <a class="btn btn-sm btn-danger mt-2 del" href="javascript:"
-                                       data-url="<?= $urlManager->createUrl([$urlStr.'/delete', 'order_id' => $order_item['id']]) ?>"
+                                       data-url="<?= $urlManager->createUrl([$urlStr . '/delete', 'order_id' => $order_item['id']]) ?>"
                                        data-content="是否删除">删除订单</a>
                                 <?php endif; ?>
                             </div>
@@ -506,25 +537,27 @@ $urlPlatform = Yii::$app->requestedRoute;
                                    href="<?= $urlManager->createUrl([$urlStr . '/detail', 'order_id' => $order_item['id']]) ?>">详情</a>
                                 <a class="btn btn-sm btn-primary mt-2 about"
                                    href="javascript:" data-toggle="modal"
-                                   data-target="#about" data-id="<?= $order_item['id'] ?>" data-remarks="<?= $order_item['seller_comments'] ?>" data-url="<?=$urlManager->createUrl([$urlStr . '/seller-comments', 'order_id' => $order_item['id']])?>">添加备注</a>
+                                   data-target="#about" data-id="<?= $order_item['id'] ?>"
+                                   data-remarks="<?= $order_item['seller_comments'] ?>"
+                                   data-url="<?= $urlManager->createUrl([$urlStr . '/seller-comments', 'order_id' => $order_item['id']]) ?>">添加备注</a>
                             </div>
                             <?php if ($order_item['pay_type'] == 2 && $order_item['is_send'] == 1 && $order_item['is_confirm'] != 1) : ?>
                                 <div>
                                     <a href="javascript:" class="btn btn-sm btn-primary mt-2 del"
-                                       data-url="<?= $urlManager->createUrl([$urlStr.'/confirm', 'order_id' => $order_item['id']]) ?>"
+                                       data-url="<?= $urlManager->createUrl([$urlStr . '/confirm', 'order_id' => $order_item['id']]) ?>"
                                        data-content="是否确认收货？">确认收货</a>
                                 </div>
                             <?php endif; ?>
                             <?php if ($order_item['is_recycle'] == 1) : ?>
                                 <div>
                                     <a class="btn btn-sm btn-primary del mt-2" href="javascript:"
-                                       data-url="<?= $urlManager->createUrl([$urlStr.'/edit', 'order_id' => $order_item['id'], 'is_recycle' => 0]) ?>"
+                                       data-url="<?= $urlManager->createUrl([$urlStr . '/edit', 'order_id' => $order_item['id'], 'is_recycle' => 0]) ?>"
                                        data-content="是否移出回收站">移出回收站</a>
                                 </div>
                             <?php else : ?>
                                 <div>
                                     <a class="btn btn-sm btn-danger del mt-2" href="javascript:"
-                                       data-url="<?= $urlManager->createUrl([$urlStr.'/edit', 'order_id' => $order_item['id'], 'is_recycle' => 1]) ?>"
+                                       data-url="<?= $urlManager->createUrl([$urlStr . '/edit', 'order_id' => $order_item['id'], 'is_recycle' => 1]) ?>"
                                        data-content="是否移入回收站">移入回收站</a>
                                 </div>
                             <?php endif; ?>
@@ -552,13 +585,13 @@ $urlPlatform = Yii::$app->requestedRoute;
                                 <?php if ($order_item['is_send'] == 1) : ?>
                                     <?php if ($order_item['is_offline'] == 0 || $order_item['express']) : ?>
                                         <?php if ($order_item['express_no'] != '') : ?>
-                                        <span class=" badge badge-default"><?= $order_item['express'] ?></span>
-                                        <span class="mr-3"><span class="titleColor">快递单号：</span><a
-                                                    href="https://www.baidu.com/s?wd=<?= $order_item['express_no'] ?>"
-                                                    target="_blank"><?= $order_item['express_no'] ?></a></span>
+                                            <span class=" badge badge-default"><?= $order_item['express'] ?></span>
+                                            <span class="mr-3"><span class="titleColor">快递单号：</span><a
+                                                        href="https://www.baidu.com/s?wd=<?= $order_item['express_no'] ?>"
+                                                        target="_blank"><?= $order_item['express_no'] ?></a></span>
                                         <?php endif; ?>
                                     <?php elseif ($order_item['is_offline'] == 1) : ?>
-                                    <span><span class="titleColor">核销员：</span><?= $order_item['clerk_name'] ?></span>
+                                        <span><span class="titleColor">核销员：</span><?= $order_item['clerk_name'] ?></span>
                                     <?php endif; ?>
                                 <?php endif; ?>
                             </div>
@@ -567,13 +600,17 @@ $urlPlatform = Yii::$app->requestedRoute;
                             </div>
                             <?php if ($order_item['shop_id']) : ?>
                                 <div>
-                                    <span class="mr-3"><span class="titleColor">门店名称：</span><?= $order_item['shop']['name'] ?></span>
-                                    <span class="mr-3"><span class="titleColor">门店地址：</span><?= $order_item['shop']['address'] ?></span>
-                                    <span class="mr-3"><span class="titleColor">电话：</span><?= $order_item['shop']['mobile'] ?></span>
+                                    <span class="mr-3"><span
+                                                class="titleColor">门店名称：</span><?= $order_item['shop']['name'] ?></span>
+                                    <span class="mr-3"><span
+                                                class="titleColor">门店地址：</span><?= $order_item['shop']['address'] ?></span>
+                                    <span class="mr-3"><span
+                                                class="titleColor">电话：</span><?= $order_item['shop']['mobile'] ?></span>
                                 </div>
                             <?php endif; ?>
                             <?php if ($order_item['content']) : ?>
-                                <div><span><span class="titleColor">买家留言：</span><?= $order_item['content'] ?></span></div>
+                                <div><span><span class="titleColor">买家留言：</span><?= $order_item['content'] ?></span>
+                                </div>
                             <?php endif; ?>
                         </td>
                     </tr>
@@ -707,13 +744,15 @@ $urlPlatform = Yii::$app->requestedRoute;
                 <div class="form-group row">
                     <label class="col-5 text-right col-form-label">金额（不含运费）：</label>
                     <div class="col-7">
-                        <input class="form-control printPay" id="printPay" type="number" v-model="pay" placeholder="请填写金额">
+                        <input class="form-control printPay" id="printPay" type="number" v-model="pay"
+                               placeholder="请填写金额">
                     </div>
                 </div>
                 <div class="form-group row">
                     <label class="col-5 text-right col-form-label">运费：</label>
                     <div class="col-7">
-                        <input class="form-control printExpress" id="printExpress" type="number" v-model="express" placeholder="请填写运费">
+                        <input class="form-control printExpress" id="printExpress" type="number" v-model="express"
+                               placeholder="请填写运费">
                     </div>
                 </div>
                 <div class="form-group row">
@@ -870,7 +909,7 @@ $urlPlatform = Yii::$app->requestedRoute;
         $(".send-modal input[name=express]").val(express);
         $(".send-modal").modal("show");
     });
-    
+
     $(document).on("click", ".send-confirm-btn", function () {
         var btn = $(this);
         var error = $(".send-form").find(".form-error");
@@ -878,7 +917,7 @@ $urlPlatform = Yii::$app->requestedRoute;
         error.hide();
         console.log(error);
         $.ajax({
-            url: "<?=$urlManager->createUrl([$urlStr.'/send'])?>",
+            url: "<?=$urlManager->createUrl([$urlStr . '/send'])?>",
             type: "post",
             data: $(".send-form").serialize(),
             dataType: "json",
@@ -932,7 +971,7 @@ $urlPlatform = Yii::$app->requestedRoute;
         var express = $(".send-modal input[name=express]").val();
         var post_code = $(".send-modal input[name=post_code]").val();
         $.ajax({
-            url: "<?=$urlManager->createUrl([$urlStr.'/print'])?>",
+            url: "<?=$urlManager->createUrl([$urlStr . '/print'])?>",
             type: 'get',
             dataType: 'json',
             data: {
@@ -987,7 +1026,7 @@ $urlPlatform = Yii::$app->requestedRoute;
                 }
             }
         });
-    });    
+    });
 
 </script>
 
@@ -1006,7 +1045,7 @@ $urlPlatform = Yii::$app->requestedRoute;
     $(document).on('click', '.printPay', function () {
         let pay_price = app.pay;
         let firstPay = app.pay;
-        if(+firstPay === pay_price){
+        if (+firstPay === pay_price) {
             app.pay = '';
         }
     });
@@ -1014,7 +1053,7 @@ $urlPlatform = Yii::$app->requestedRoute;
     $(document).on('click', '.printExpress', function () {
         let express_price = app.express;
         let firstExpress = app.express;
-        if(+firstExpress === express_price){
+        if (+firstExpress === express_price) {
             app.express = '';
         }
     });
@@ -1027,7 +1066,7 @@ $urlPlatform = Yii::$app->requestedRoute;
         var error = $('.form-error');
         error.hide();
         btn.btnLoading(btn.text());
-        var url = "<?=$urlManager->createUrl([$urlStr. '/update-price'])?>"
+        var url = "<?=$urlManager->createUrl([$urlStr . '/update-price'])?>"
         $.ajax({
             url: url,
             type: 'get',
