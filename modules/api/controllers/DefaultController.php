@@ -19,6 +19,7 @@ use app\models\Setting;
 use app\models\StorePermission;
 use app\models\UploadConfig;
 use app\models\UploadForm;
+use app\modules\api\models\BuyRecordListForm;
 use app\modules\api\models\CatListForm;
 use app\modules\api\models\CommentListForm;
 use app\modules\api\models\CouponListForm;
@@ -191,6 +192,13 @@ class DefaultController extends Controller
     public function actionCommentList()
     {
         $form = new CommentListForm();
+        $form->attributes = \Yii::$app->request->get();
+        return $form->search();
+    }
+
+    public function actionBuyRecord()
+    {
+        $form = new BuyRecordListForm();
         $form->attributes = \Yii::$app->request->get();
         return $form->search();
     }
