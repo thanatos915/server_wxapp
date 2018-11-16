@@ -89,13 +89,18 @@ class ShopController extends Controller
 
         $params = Yii::$app->request->get();
 
-        $query = UserShareMoney::find()->alias('us')->where(['us.user_id' => Yii::$app->user->id, 'us.is_delete' => 0, 'us.store_id' => $this->store->id])->leftJoin(['o' => Order::tableName(), 'o.id' => 'us.order_id'])->select(['us.money', 'us.addtime', 'o.pay_price', 'o.name']);
+        $query = UserShareMoney::find()->alias('us')->where(['us.user_id' => Yii::$app->user->id, 'us.is_delete' => 0, 'us.store_id' => $this->store->id])->leftJoin(['o' => Order::tableName()], 'o.id = us.order_id')->select(['us.money', 'us.addtime', 'o.pay_price', 'o.name']);
 
         $count = $query->count();
 
         $pagination = new Pagination(['totalCount' => $count, 'pageSize' => $params['limit'], 'page' => $params['page'] - 1]);
 
         $list = $query->limit($pagination->limit)->offset($pagination->offset)->orderBy('o.addtime DESC')->asArray()->all();
+
+        foreach ($list as &$v) {
+            $v['addtime'] = date('Y-m-d H:i:s', $v['addtime']);
+        }
+
         $data = [
             'row_count' => $count,
             'page_count' => $pagination->pageCount,

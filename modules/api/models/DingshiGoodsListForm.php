@@ -53,6 +53,9 @@ class DingshiGoodsListForm extends ApiModel
     {
         if (!$this->validate())
             return $this->errorResponse;
+
+        $dingshi = Dingshi::find()->where(['store_id' => $this->store_id])->one();
+
         $query = Goods::find()->alias('g')->where([
             'g.status' => 1,
             'g.is_delete' => 0,
@@ -130,6 +133,7 @@ class DingshiGoodsListForm extends ApiModel
                 $list[$i]['price'] = Goods::GOODS_NEGOTIABLE;
             }
             $list[$i]['sales'] = $this->numToW($item['num'] + $item['virtual_sales']) . $item['unit'];
+            $list[$i]['end_time'] = strtotime(date('Y-m-d') . $dingshi->end_time . ':00:00');
         }
         $data = [
             'row_count' => $count,
@@ -148,7 +152,6 @@ class DingshiGoodsListForm extends ApiModel
             return new ApiResponse(1, 'error');
         }
 
-        $dingshi = Dingshi::find()->where(['store_id' => $this->store_id])->one();
 
         $cat_ids = [];
 
@@ -227,7 +230,6 @@ class DingshiGoodsListForm extends ApiModel
                 $list[$i]['pic_url'] = Goods::getGoodsPicStatic($item['id'])->pic_url;
             }
             $list[$i]['sales'] = $this->numToW($item['num'] + $item['virtual_sales']) . $item['unit'];
-            $list[$i]['end_time'] = strtotime(date('Y-m-d') . $dingshi->end_time . ':00:00');
         }
         $data = [
             'row_count' => $count,
