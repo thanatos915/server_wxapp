@@ -45,8 +45,7 @@ class CashForm extends MchModel
         $query = Cash::find()->alias('c')
             ->where(['c.is_delete' => 0, 'c.store_id' => $this->store_id])
             ->leftJoin('{{%user}} u', 'u.id=c.user_id')
-            ->leftJoin('{{%share}} s', 's.user_id=c.user_id')
-            ->andWhere(['s.is_delete' => 0,'u.is_distributor' => 1]);
+            ->andWhere(['u.is_shop_admin' => 1]);
         if ($this->keyword) {
             $query->andWhere([
                 'or',
