@@ -45,9 +45,9 @@ class ShopSendForm extends ApiModel
         // 订单结束时间
         $end = strtotime($end_date);
         $query = Order::find();
-        $query->andWhere(['shop_id' => $shop->id])
-            ->andWhere(['and', ['>=', 'addtime', $start], ['<', 'addtime', $end]])
-            ->andWhere(['is_pay' => 1]);
+//        $query->andWhere(['shop_id' => $shop->id])
+//            ->andWhere(['and', ['>=', 'addtime', $start], ['<', 'addtime', $end]])
+//            ->andWhere(['is_pay' => 1]);
 
         $order_list = $query->all();
 
