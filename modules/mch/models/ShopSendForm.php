@@ -6,6 +6,8 @@
 namespace app\modules\mch\models;
 
 
+use app\models\Dingshi;
+use app\models\Order;
 use app\models\Shop;
 use app\modules\api\models\ApiModel;
 
