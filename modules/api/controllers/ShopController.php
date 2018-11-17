@@ -110,8 +110,9 @@ class ShopController extends Controller
         return new ApiResponse(0, 'success', $data);
     }
 
-    public function actionShopSend($id)
+    public function actionShopSend()
     {
+        $id = Yii::$app->user->identity->shop_id;
         $form = new ShopSendForm();
         $form->load(['id' => $id], '');
         $list = $form->search();
