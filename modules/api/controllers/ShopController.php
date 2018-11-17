@@ -14,6 +14,7 @@ use app\models\Setting;
 use app\models\Shop;
 use app\models\User;
 use app\models\UserShareMoney;
+use app\modules\mch\models\ShopSendForm;
 use Yii;
 use app\modules\api\behaviors\LoginBehavior;
 use yii\data\Pagination;
@@ -107,6 +108,20 @@ class ShopController extends Controller
             'list' => $list,
         ];
         return new ApiResponse(0, 'success', $data);
+    }
+
+    public function actionShopSend($id)
+    {
+        $form = new ShopSendForm();
+        $form->load(['id' => $id], '');
+        $list = $form->search();
+        return new BaseApiResponse([
+            'code' => 0,
+            'msg' => 'success',
+            'data' => [
+                'shop' => $list,
+            ],
+        ]);
     }
 
 }
