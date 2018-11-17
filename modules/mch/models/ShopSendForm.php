@@ -6,6 +6,7 @@
 namespace app\modules\mch\models;
 
 
+use app\models\Shop;
 use app\modules\api\models\ApiModel;
 
 class ShopSendForm extends ApiModel
