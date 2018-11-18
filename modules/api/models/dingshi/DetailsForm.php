@@ -72,7 +72,7 @@ class DetailsForm extends ApiModel
         if($this->goods_id){
             $this->dingshi_goods = DingshiGoods::find()->where(['goods_id' => $this->goods_id, 'store_id'=> $this->store_id])
                 ->andWhere(['or', ['open_date' => date('Y-m-d')], ['>', 'open_date', date('Y-m-d')]])
-                ->orderBy(['open_date' => SORT_ASC, 'start_time' => SORT_ASC])->one();
+                ->orderBy(['open_date' => SORT_ASC])->one();
             if (!$this->dingshi_goods) {
                 return [
                     'code' => 1,
