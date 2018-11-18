@@ -144,7 +144,7 @@ class DetailsForm extends ApiModel
                 'cover_pic' => $goods->cover_pic,
                 'attr_pic' => $pic_list[0]['pic_url'],
                 'name' => $goods->name,
-                'price' => floatval($goods->original_price),
+                'price' => floatval($goods->price),
                 'detail' => $goods->detail,
                 'sales_volume' => $goods->getSalesVolume() + $goods->virtual_sales,
                 'attr_group_list' => $goods->getAttrGroupList(),
