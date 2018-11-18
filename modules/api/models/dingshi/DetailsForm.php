@@ -37,7 +37,7 @@ class DetailsForm extends ApiModel
      * @return array
      * 秒杀商品详情
      */
-    public function search()
+    public function search($return = false)
     {
         if (!$this->validate())
             return $this->errorResponse;
@@ -135,6 +135,29 @@ class DetailsForm extends ApiModel
         $dingshi['old_big_price'] = max($old);
         $dingshi['new_small_price'] = min($new);
         $dingshi['new_big_price'] = max($new);
+
+        if ($return) {
+            return [
+                'id' => $goods->id,
+                'attr' => $goods->attr,
+                'pic_list' => $pic_list,
+                'cover_pic' => $goods->cover_pic,
+                'attr_pic' => $pic_list[0]['pic_url'],
+                'name' => $goods->name,
+                'price' => floatval($goods->original_price),
+                'detail' => $goods->detail,
+                'sales_volume' => $goods->getSalesVolume() + $goods->virtual_sales,
+                'attr_group_list' => $goods->getAttrGroupList(),
+                'num' => $goods->getNum(),
+                'is_favorite' => $is_favorite,
+                'service_list' => $new_service_list,
+                'original_price' => floatval($goods->original_price),
+                'video_url' => $goods->video_url,
+                'unit' => $goods->unit,
+                'dingshi' => $dingshi,
+                'use_attr' => intval($goods->use_attr),
+            ];
+        }
 
         return [
             'code' => 0,

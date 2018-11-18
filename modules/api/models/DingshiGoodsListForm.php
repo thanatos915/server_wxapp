@@ -18,6 +18,7 @@ use app\models\GoodsCat;
 use app\models\GoodsPic;
 use app\models\Order;
 use app\models\OrderDetail;
+use app\modules\api\models\dingshi\DetailsForm;
 use yii\data\Pagination;
 
 class DingshiGoodsListForm extends ApiModel
@@ -126,11 +127,17 @@ class DingshiGoodsListForm extends ApiModel
             ->asArray()->groupBy('g.id')->all();
 
         foreach ($list as $i => $item) {
-            if (!$item['pic_url']) {
-                $list[$i]['pic_url'] = Goods::getGoodsPicStatic($item['id'])->pic_url;
+
+            $form = new DetailsForm();
+            $form->goods_id = $item['id'];
+            $form->store_id = $this->store->id;
+            if (!\Yii::$app->user->isGuest) {
+                $form->user_id = \Yii::$app->user->id;
             }
-            if($item['is_negotiable']) {
-                $list[$i]['price'] = Goods::GOODS_NEGOTIABLE;
+            $list[$i] = $form->search(true);
+
+            if (!$list[$i]['pic_url']) {
+                $list[$i]['pic_url'] = Goods::getGoodsPicStatic($item['id'])->pic_url;
             }
             $list[$i]['sales'] = $this->numToW($item['num'] + $item['virtual_sales']) . $item['unit'];
             $list[$i]['end_time'] = strtotime(date('Y-m-d') . $dingshi->end_time . ':00:00');
