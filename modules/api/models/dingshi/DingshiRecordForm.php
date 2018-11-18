@@ -52,6 +52,10 @@ class DingshiRecordForm extends ApiModel
         $list = $query->select('u.nickname,u.avatar_url,o.addtime,od.num')->limit($pagination->limit)
             ->offset($pagination->offset)->asArray()->all();
 
+        foreach ($list as &$item) {
+            $item['addtime'] = date('Y-m-d H:i:s', $item['addtime']);
+        }
+
         $data = [
             'row_count' => $count,
             'page_count' => $pagination->pageCount,
