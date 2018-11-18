@@ -113,7 +113,7 @@ class GoodsForm extends ApiModel
             'original_price' => floatval($goods->original_price),
             'video_url' => $goods->video_url,
             'unit' => $goods->unit,
-            'miaosha' => $this->getMiaoshaData($goods->id),
+            'dingshi' => $this->getMiaoshaData($goods->id),
             'use_attr' => intval($goods->use_attr),
             'mch' => $mch,
         ];
