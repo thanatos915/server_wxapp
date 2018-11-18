@@ -193,8 +193,6 @@ class DetailsForm extends ApiModel
             'begin_time' => strtotime($dingshi_goods->open_date . ' ' . $dingshi->start_time . ':00:00'),
             'end_time' => strtotime($dingshi_goods->open_date . ' ' . $dingshi->end_time. ':00:00'),
             'now_time' => time(),
-            'buy_max' => $dingshi_goods->buy_max,
-            'buy_limit' => $dingshi_goods->buy_limit,
             'dingshi_data' => $dingshi_data,
             'dingshi_goods_id' => $this->dingshi_goods->id
         ];
