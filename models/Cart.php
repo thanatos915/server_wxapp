@@ -15,6 +15,7 @@ use Yii;
  * @property integer $addtime
  * @property integer $is_delete
  * @property string $attr
+ * @property integer $source
  */
 class Cart extends \yii\db\ActiveRecord
 {
@@ -33,7 +34,7 @@ class Cart extends \yii\db\ActiveRecord
     {
         return [
             [['store_id', 'user_id', 'goods_id', 'attr'], 'required'],
-            [['store_id', 'user_id', 'goods_id', 'num', 'addtime', 'is_delete'], 'integer'],
+            [['store_id', 'user_id', 'goods_id', 'num', 'addtime', 'is_delete', 'source'], 'integer'],
             [['attr'], 'string'],
         ];
     }

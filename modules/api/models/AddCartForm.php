@@ -18,12 +18,14 @@ class AddCartForm extends ApiModel
     public $goods_id;
     public $attr;
     public $num;
+    public $source;
 
     public function rules()
     {
         return [
             [['goods_id', 'attr', 'num'], 'required'],
-            [['goods_id', 'num'], 'integer'],
+            [['goods_id', 'num', 'source'], 'integer'],
+            ['source', 'default', 'value' => 0],
             [['num'], 'integer', 'min' => 1],
         ];
     }
@@ -59,6 +61,7 @@ class AddCartForm extends ApiModel
             'store_id' => $this->store_id,
             'goods_id' => $this->goods_id,
             'user_id' => $this->user_id,
+            'source' => $this->source,
             'is_delete' => 0,
             'attr' => $attr,
         ]);
@@ -67,6 +70,7 @@ class AddCartForm extends ApiModel
             $cart->store_id = $this->store_id;
             $cart->goods_id = $this->goods_id;
             $cart->user_id = $this->user_id;
+            $cart->source = $this->source;
             $cart->num = 0;
             $cart->addtime = time();
             $cart->is_delete = 0;

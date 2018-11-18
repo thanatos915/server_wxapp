@@ -8,6 +8,8 @@ namespace app\modules\api\controllers;
 
 use app\hejiang\BaseApiResponse;
 use app\modules\api\models\dingshi\DetailsForm;
+use app\modules\api\models\dingshi\DingshiRecordForm;
+use app\modules\api\models\dingshi\OrderSubmitPreviewForm;
 use app\modules\api\models\DingshiCatListForm;
 use app\modules\api\models\DingshiGoodsListForm;
 
@@ -42,6 +44,29 @@ class DingshiController extends Controller
             $form->user_id = \Yii::$app->user->id;
         }
         return new BaseApiResponse($form->search());
+    }
+
+    /**
+     * 秒杀订单提交预览页面
+     */
+    public function actionSubmitPreview()
+    {
+        $form = new OrderSubmitPreviewForm();
+        $form->attributes = \Yii::$app->request->get();
+        $form->store_id = $this->store->id;
+        $form->user_id = \Yii::$app->user->id;
+        return new BaseApiResponse($form->search());
+    }
+
+    /**
+     * 购买记录
+     */
+    public function actionRecordList()
+    {
+        $form = new DingshiRecordForm();
+        $form->attributes = \Yii::$app->request->get();
+        $form->store_id = $this->store->id;
+        return $form->search();
     }
 
 }
