@@ -8,6 +8,8 @@
 
 namespace app\modules\api\models;
 
+use app\models\Dingshi;
+use app\models\DingshiGoods;
 use app\utils\GetInfo;
 use app\hejiang\ApiResponse;
 use app\models\Favorite;
@@ -111,7 +113,7 @@ class GoodsForm extends ApiModel
             'original_price' => floatval($goods->original_price),
             'video_url' => $goods->video_url,
             'unit' => $goods->unit,
-//                'miaosha' => $this->getMiaoshaData($goods->id),
+            'miaosha' => $this->getMiaoshaData($goods->id),
             'use_attr' => intval($goods->use_attr),
             'mch' => $mch,
         ];
@@ -121,34 +123,35 @@ class GoodsForm extends ApiModel
     //获取商品秒杀数据
     public function getMiaoshaData($goods_id)
     {
-        $miaosha_goods = MiaoshaGoods::findOne([
+        $dingshi_goods = DingshiGoods::findOne([
             'goods_id' => $goods_id,
-            'is_delete' => 0,
-            'start_time' => intval(date('H')),
             'open_date' => date('Y-m-d'),
         ]);
-        if (!$miaosha_goods) {
+        if (!$dingshi_goods) {
             return null;
         }
-        $attr_data = json_decode($miaosha_goods->attr, true);
-        $total_miaosha_num = 0;
+        $attr_data = json_decode($dingshi_goods->attr, true);
+        $total_dingshi_num = 0;
         $total_sell_num = 0;
-        $miaosha_price = 0.00;
+        $dingshi_price = 0.00;
         foreach ($attr_data as $i => $attr_data_item) {
-            $total_miaosha_num += $attr_data_item['miaosha_num'];
+            $total_dingshi_num += $attr_data_item['dingshi_num'];
             $total_sell_num += $attr_data_item['sell_num'];
-            if ($miaosha_price == 0) {
-                $miaosha_price = $attr_data_item['miaosha_price'];
+            if ($dingshi_price == 0) {
+                $dingshi_price = $attr_data_item['dingshi_price'];
             } else {
-                $miaosha_price = min($miaosha_price, $attr_data_item['miaosha_price']);
+                $dingshi_price = min($dingshi_price, $attr_data_item['dingshi_price']);
             }
         }
+
+        $dingshi = Dingshi::find()->where(['store_id' => $this->store_id])->one();
+
         return [
-            'miaosha_num' => $total_miaosha_num,
+            'dingshi_num' => $total_dingshi_num,
             'sell_num' => $total_sell_num,
-            'miaosha_price' => (float)$miaosha_price,
-            'begin_time' => strtotime($miaosha_goods->open_date . ' ' . $miaosha_goods->start_time . ':00:00'),
-            'end_time' => strtotime($miaosha_goods->open_date . ' ' . $miaosha_goods->start_time . ':59:59'),
+            'dingshi_price' => (float)$dingshi_price,
+            'begin_time' => strtotime($dingshi_goods->open_date . ' ' . $dingshi->start_time. ':00:00'),
+            'end_time' => strtotime($dingshi_goods->open_date . ' ' . $dingshi->end_time. ':59:59'),
             'now_time' => time(),
         ];
     }
