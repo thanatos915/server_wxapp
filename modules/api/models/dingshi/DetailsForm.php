@@ -14,8 +14,6 @@ use app\models\DingshiGoods;
 use app\models\Goods;
 use app\models\GoodsPic;
 use app\utils\GetInfo;
-use app\models\MsGoods;
-use app\models\MsGoodsPic;
 use app\modules\api\models\ApiModel;
 
 class DetailsForm extends ApiModel
@@ -43,6 +41,7 @@ class DetailsForm extends ApiModel
     {
         if (!$this->validate())
             return $this->errorResponse;
+        /*
         if ($this->id) {
             $this->dingshi_goods = DingshiGoods::findOne(['id' => $this->id]);
             if (!$this->dingshi_goods) {
@@ -69,8 +68,9 @@ class DetailsForm extends ApiModel
                 }
             }
         }
+        */
         if($this->goods_id){
-            $this->dingshi_goods = DingshiGoods::find()->where(['goods_id' => $this->goods_id, 'is_delete' => 0, 'store_id'=> $this->store_id])
+            $this->dingshi_goods = DingshiGoods::find()->where(['goods_id' => $this->goods_id, 'store_id'=> $this->store_id])
                 ->andWhere(['or', ['open_date' => date('Y-m-d')], ['>', 'open_date', date('Y-m-d')]])
                 ->orderBy(['open_date' => SORT_ASC, 'start_time' => SORT_ASC])->one();
             if (!$this->dingshi_goods) {
