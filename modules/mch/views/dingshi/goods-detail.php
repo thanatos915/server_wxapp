@@ -43,6 +43,7 @@ $this->params['active_nav_group'] = 10;
                 <tr>
                     <th colspan="<?= count($item['attr'][0]['attr_list']) ?>">规格</th>
                     <th>秒杀价</th>
+                    <th>数量</th>
                 </tr>
                 </thead>
                 <?php foreach ($item['attr'] as $index => $attr_item) : ?>
@@ -52,6 +53,9 @@ $this->params['active_nav_group'] = 10;
                         <?php endforeach; ?>
                         <td>
                             <input type="number" data-id="<?=$item['id']?>" data-value="<?=$attr_item['dingshi_price']?>" data-index="<?=$index?>" class="miaosha_price" step="0.01" value="<?= $attr_item['dingshi_price'] ?>">
+                        </td>
+                        <td>
+                            <input type="number" data-id="<?=$item['id']?>" data-value="<?=$attr_item['dingshi_num']?>" data-index="<?=$index?>" class="miaosha_num" step="0.01" value="<?= $attr_item['dingshi_num'] ?>">
                         </td>
                     </tr>
                 <?php endforeach; ?>

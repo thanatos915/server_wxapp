@@ -71,6 +71,7 @@ $this->params['active_nav_group'] = 10;
                                 <th>售价</th>
                                 <th>秒杀价</th>
                                 <th>库存</th>
+                                <th>秒杀数量</th>
                             </tr>
                             </thead>
                             <tr v-for="attr_row in goods.attr">
@@ -82,6 +83,10 @@ $this->params['active_nav_group'] = 10;
                                            step="0.01" min="0.01"
                                            v-bind:max="attr_row.price==0?goods.price:attr_row.price"></td>
                                 <td>{{attr_row.num}}</td>
+                                <td><input style="width: 4rem" type="number"
+                                           class="form-control form-control-sm check-goods-data"
+                                           v-model="attr_row.dingshi_num" step="1"
+                                           min="1" v-bind:max="attr_row.num"></td>
                             </tr>
                         </table>
                     </template>
@@ -235,6 +240,7 @@ $this->params['active_nav_group'] = 10;
         $(".search-goods-id").val(goods.id);
         for (var i in goods.attr) {
             goods.attr[i].dingshi_price = parseFloat(goods.attr[i].price == 0 ? goods.price : goods.attr[i].price);
+            goods.attr[i].dingshi_num= goods.attr[i].num;
             goods.attr[i].sell_num = 0;
         }
         app.goods = goods;
@@ -246,11 +252,17 @@ $this->params['active_nav_group'] = 10;
         for (var i in app.goods.attr) {
             if (!app.goods.attr[i].dingshi_price)
                 app.goods.attr[i].dingshi_price = 0;
+            if (!app.goods.attr[i].dingshi_num)
+                app.goods.attr[i].dingshi_num = 0;
 
 
             app.goods.attr[i].dingshi_price = parseFloat(app.goods.attr[i].dingshi_price);
+            app.goods.attr[i].dingshi_num = parseInt(app.goods.attr[i].dingshi_num);
             if (app.goods.attr[i].dingshi_price < 0.01 || app.goods.attr[i].dingshi_price > (app.goods.attr[i].price == 0 ? app.goods.price : app.goods.attr[i].price)) {
                 app.goods.attr[i].dingshi_price = parseFloat(app.goods.attr[i].price == 0 ? app.goods.price : app.goods.attr[i].price);
+            }
+            if (app.goods.attr[i].dingshi_num < 1 || app.goods.attr[i].dingshi_num > app.goods.attr[i].num) {
+                app.goods.attr[i].dingshi_num = app.goods.attr[i].num;
             }
         }
     }
