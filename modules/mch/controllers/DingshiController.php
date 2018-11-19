@@ -106,7 +106,7 @@ class DingshiController extends Controller
     public function actionGoodsDelete($goods_id)
     {
         DingshiGoods::deleteAll([
-            'id' => $goods_id,
+            'goods_id' => $goods_id,
             'store_id' => $this->store->id,
         ]);
         return [
@@ -116,7 +116,7 @@ class DingshiController extends Controller
     }
 
     //删除单个秒杀记录
-    public function actionDingshiDelect($id)
+    public function actionDingshiDelete($id)
     {
         DingshiGoods::deleteAll([
             'id' => $id,
