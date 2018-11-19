@@ -226,12 +226,12 @@ class OrderController extends Controller
     //核销订单详情
     public function actionClerkDetail()
     {
-        if (\Yii::$app->user->identity->is_clerk != 1) {
-            return new BaseApiResponse([
-                'code' => 1,
-                'msg' => '不是核销员禁止核销'
-            ]);
-        }
+//        if (\Yii::$app->user->identity->is_clerk != 1) {
+//            return new BaseApiResponse([
+//                'code' => 1,
+//                'msg' => '不是核销员禁止核销'
+//            ]);
+//        }
         $form = new OrderDetailForm();
         $form->order_no = \Yii::$app->request->get('order_no');
         $form->store_id = $this->store->id;

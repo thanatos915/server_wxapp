@@ -42,7 +42,7 @@ class OrderDetailForm extends ApiModel
         $order = Order::find()->andFilterWhere([
             'store_id' => $this->store_id,
             'user_id' => $this->user_id,
-            'id' => $this->order_id,
+//            'id' => $this->order_id,
             'order_no' => $this->order_no,
             'is_delete' => 0,
             'is_recycle'=> 0,
