@@ -432,6 +432,11 @@ class Menu
                         'is_menu' => true,
                         'route' => 'mch/share/cash',
                     ],
+                    [
+                        'name' => '交易详情',
+                        'is_menu' => true,
+                        'route' => 'mch/share/order',
+                    ],
                 ],
             ],
             [

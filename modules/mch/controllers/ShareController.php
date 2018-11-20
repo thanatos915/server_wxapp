@@ -10,8 +10,12 @@ namespace app\modules\mch\controllers;
 
 use Alipay\AlipayRequestFactory;
 use app\models\Goods;
+use app\models\Order;
+use app\models\Shop;
 use app\modules\api\models\ApiModel;
 use app\modules\mch\models\ExportList;
+use app\modules\mch\models\ShopForm;
+use app\modules\mch\models\ShopOrderListForm;
 use app\utils\Sms;
 use app\hejiang\ApiResponse;
 use app\hejiang\ValidationErrorResponse;
@@ -544,6 +548,7 @@ class ShareController extends Controller
         }
     }
 
+    /*
     public function actionOrder()
     {
         // 获取可导出数据
@@ -584,6 +589,7 @@ class ShareController extends Controller
             'type' => $type
         ]);
     }
+    */
 
     public function actionCustom()
     {
@@ -608,4 +614,27 @@ class ShareController extends Controller
         $form->store_id = $this->store->id;
         return $form->search();
     }
+
+    /**
+     * 门店交易详情
+     */
+    public function actionOrder()
+    {
+        $form = new ShopOrderListForm();
+        $form->attributes = \Yii::$app->request->get();
+        $form->attributes = \Yii::$app->request->post();
+        $form->limit = 10;
+        $data = $form->search();
+        // 门店列表
+        $form = new ShopForm();
+        $form->store_id = $this->store->id;
+        $shopList = $form->getList();
+        return $this->render('order', [
+            'row_count' => $data['row_count'],
+            'pagination' => $data['pagination'],
+            'list' => $data['list'],
+            'shopList' => $shopList['list']
+        ]);
+    }
+
 }

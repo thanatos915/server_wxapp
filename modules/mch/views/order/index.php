@@ -21,7 +21,7 @@ $urlStr = get_plugin_url();
 $status = Yii::$app->request->get('status');
 $is_recycle = Yii::$app->request->get('is_recycle');
 $user_id = Yii::$app->request->get('user_id');
-$condition = ['user_id' => $user_id, 'clerk_id' => $_GET['clerk_id'], 'shop_id' => $_GET['shop_id']];
+$condition = ['user_id' => $user_id, 'clerk_id' => $_GET['clerk_id'], 'shop' => $_GET['shop']];
 if ($status === '' || $status === null || $status == -1) {
     $status = -1;
 }

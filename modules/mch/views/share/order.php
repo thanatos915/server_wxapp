@@ -1,32 +1,28 @@
 <?php
+defined('YII_ENV') or exit('Access Denied');
+
 /**
  * Created by PhpStorm.
  * User: Administrator
- * Date: 2017/9/23
- * Time: 11:55
+ * Date: 2017/6/29
+ * Time: 9:50
  */
-defined('YII_ENV') or exit('Access Denied');
 
 use yii\widgets\LinkPager;
 
-/* @var \app\models\User $user */
+/** @var \app\models\Shop[] $shopList */
 
 $urlManager = Yii::$app->urlManager;
+$urlPlatform = Yii::$app->controller->route;
 $statics = Yii::$app->request->baseUrl . '/statics';
-$this->title = '分销订单';
-$this->params['active_nav_group'] = 5;
+$this->title = '门店订单';
+$this->params['active_nav_group'] = 3;
 $status = Yii::$app->request->get('status');
-$order_type = Yii::$app->request->get('order_type');
-$get = Yii::$app->request->get();
-$parent_id = Yii::$app->request->get('parent_id');
-$condition = ['parent_id' => $parent_id];
+$user_id = Yii::$app->request->get('user_id');
+$condition = ['user_id' => $user_id, 'clerk_id' => $_GET['clerk_id'], 'shop' => $_GET['shop']];
 if ($status === '' || $status === null || $status == -1) {
     $status = -1;
 }
-if ($order_type === '' || $order_type === null || $order_type === -1) {
-    $order_type = -1;
-}
-$urlPlatform = Yii::$app->controller->route;
 ?>
 <style>
     .order-item {
@@ -49,14 +45,6 @@ $urlPlatform = Yii::$app->controller->route;
         margin-top: -1px;
     }
 
-    .table tbody tr td {
-        vertical-align: middle;
-    }
-
-    .titleColor {
-        color: #888888;
-    }
-
     .goods-item:last-child {
         margin-bottom: 0;
     }
@@ -71,10 +59,18 @@ $urlPlatform = Yii::$app->controller->route;
         margin-right: 1rem;
     }
 
+    .table tbody tr td {
+        vertical-align: middle;
+    }
+
     .goods-name {
         white-space: nowrap;
         text-overflow: ellipsis;
         overflow: hidden;
+    }
+
+    .titleColor {
+        color: #888888;
     }
 
     .order-tab-1 {
@@ -82,7 +78,7 @@ $urlPlatform = Yii::$app->controller->route;
     }
 
     .order-tab-2 {
-        width: 15%;
+        width: 20%;
         text-align: center;
     }
 
@@ -92,12 +88,12 @@ $urlPlatform = Yii::$app->controller->route;
     }
 
     .order-tab-4 {
-        width: 15%;
+        width: 20%;
         text-align: center;
     }
 
     .order-tab-5 {
-        width: 30%;
+        width: 10%;
         text-align: center;
     }
 
@@ -105,13 +101,18 @@ $urlPlatform = Yii::$app->controller->route;
         color: inherit;
     }
 </style>
+<script language="JavaScript" src="<?= $statics ?>/mch/js/LodopFuncs.js"></script>
+<object id="LODOP_OB" classid="clsid:2105C259-1E0C-4534-8141-A753534CB4CA" width=0 height=0 style="display: none">
+    <embed id="LODOP_EM" type="application/x-print-lodop" width=0 height=0></embed>
+</object>
+
 <div class="panel mb-3">
     <div class="panel-header"><?= $this->title ?></div>
     <div class="panel-body">
         <div class="mb-3 clearfix">
             <div class="p-4 bg-shaixuan">
                 <form method="get">
-                    <?php $_s = ['keyword'] ?>
+                    <?php $_s = ['keyword', 'keyword_1', 'date_start', 'date_end', 'page', 'per-page'] ?>
                     <?php foreach ($_GET as $_gi => $_gv) :
                         if (in_array($_gi, $_s)) {
                             continue;
@@ -119,322 +120,377 @@ $urlPlatform = Yii::$app->controller->route;
                         <input type="hidden" name="<?= $_gi ?>" value="<?= $_gv ?>">
                     <?php endforeach; ?>
                     <div flex="dir:left">
-                        <div class="mb-3">
-                            <div class="input-group">
-                                <input class="form-control"
-                                       placeholder="订单号/用户"
-                                       name="keyword"
-                                       autocomplete="off"
-                                       value="<?= isset($_GET['keyword']) ? trim($_GET['keyword']) : null ?>">
-                                <span class="input-group-btn">
-                                        <button class="btn btn-primary ml-2">搜索</button>
-                                    </span>
+                        <div class="mr-3 ml-3">
+                            <div class="form-group row">
+                                <div>
+                                    <label class="col-form-label">下单时间：</label>
+                                </div>
+                                <div>
+                                    <div class="input-group">
+                                        <input class="form-control" id="date_start" name="date_start"
+                                               autocomplete="off"
+                                               value="<?= isset($_GET['date_start']) ? trim($_GET['date_start']) : '' ?>">
+                                        <span class="input-group-btn">
+                                            <a class="btn btn-secondary" id="show_date_start" href="javascript:">
+                                                <span class="iconfont icon-daterange"></span>
+                                            </a>
+                                        </span>
+                                        <span class="middle-center input-group-addon" style="padding:0 4px">至</span>
+                                        <input class="form-control" id="date_end" name="date_end"
+                                               autocomplete="off"
+                                               value="<?= isset($_GET['date_end']) ? trim($_GET['date_end']) : '' ?>">
+                                        <span class="input-group-btn">
+                                            <a class="btn btn-secondary" id="show_date_end" href="javascript:">
+                                                <span class="iconfont icon-daterange"></span>
+                                            </a>
+                                        </span>
+                                    </div>
+                                </div>
+                                <div class="middle-center">
+                                    <a href="javascript:" class="new-day btn btn-primary" data-index="7">近7天</a>
+                                    <a href="javascript:" class="new-day btn btn-primary" data-index="30">近30天</a>
+                                </div>
                             </div>
                         </div>
                     </div>
                     <div flex="dir:left">
-                        <div>
-                            <label class="col-form-label">来源平台：</label>
-                        </div>
+                        <label class="col-form-label">自提门店：</label>
                         <div class="dropdown float-right">
                             <button class="btn btn-secondary dropdown-toggle" type="button"
                                     data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                <?php if ($_GET['platform'] === '1') :
-                                    ?>支付宝
-                                <?php elseif ($_GET['platform'] === '0') :
-                                    ?>微信
-                                <?php elseif ($_GET['platform'] == '') :
-                                    ?>全部订单
-                                <?php else : ?>
-                                <?php endif; ?>
+                                <?php
+                                $isEcho = false;
+                                foreach ($shopList as $k => $v) {
+                                    if($_GET['shop'] == $v['id']) {
+                                        $isEcho = true;
+                                        echo $v['name'];
+                                    }
+                                }
+                                if ($isEcho === false) {
+                                    echo '全部门店';
+                                }
+                                ?>
                             </button>
                             <div class="dropdown-menu" style="min-width:8rem">
-                                <a class="dropdown-item"
-                                   href="<?= $urlManager->createUrl([$urlPlatform]) ?>">全部订单</a>
-                                <a class="dropdown-item"
-                                   href="<?= $urlManager->createUrl([$urlPlatform, 'platform' => 1]) ?>">支付宝</a>
-                                <a class="dropdown-item"
-                                   href="<?= $urlManager->createUrl([$urlPlatform, 'platform' => 0]) ?>">微信</a>
+                                <?php foreach ($shopList as $k => $v) { ?>
+                                    <a class="dropdown-item"
+                                       href="<?= $urlManager->createUrl([$urlPlatform, 'shop' => $v['id']]) ?>"><?= $v['name'] ?></a>
+                                <?php } ?>
                             </div>
                         </div>
-                </span>
-                                <a style="margin-left: 10px;" class="btn btn-secondary export-btn" href="javascript:">批量导出</a>
+                        <div class="mr-4">
+                            <div class="form-group">
+                                <button class="btn btn-primary mr-4">筛选</button>
                             </div>
                         </div>
                     </div>
                 </form>
-                <div class="mt-2">
-                    <?php if ($user) : ?>
-                        <span class="status-item mr-3">分销商：<?= $user->nickname ?>的下级订单</span>
-                    <?php endif; ?>
-                </div>
             </div>
         </div>
-        <?php if (count($type) > 1): ?>
-            <div class="mb-4">
-                <ul class="nav nav-tabs status">
-                    <li class="nav-item">
-                        <a class="status-item nav-link <?= $order_type == -1 ? 'active' : null ?>"
-                           href="<?= $urlManager->createUrl(array_merge([$_GET['r']])) ?>">全部</a>
-                    </li>
-                    <?php foreach ($type as $key => $value): ?>
-                        <li class="nav-item">
-                            <a class="status-item nav-link <?= $order_type == $key ? 'active' : null ?>"
-                               href="<?= $urlManager->createUrl(array_merge([$_GET['r']], $condition, ['order_type' => $key])) ?>"><?= $value ?></a>
-                        </li>
-                    <?php endforeach; ?>
-                </ul>
-            </div>
-        <?php endif; ?>
+        <div class="mb-4">
+            <ul class="nav nav-tabs status">
+                <li class="nav-item">
+                    <a class="status-item nav-link <?= $status == -1 ? 'active' : null ?>"
+                       href="<?= $urlManager->createUrl(array_merge([$_GET['r']])) ?>">全部</a>
+                </li>
+                <li class="nav-item">
+                    <a class="status-item nav-link <?= $status == 0 ? 'active' : null ?>"
+                       href="<?= $urlManager->createUrl(array_merge([$_GET['r']], $condition, ['status' => 0])) ?>">未付款<?= $store_data['status_count']['status_0'] ? '(' . $store_data['status_count']['status_0'] . ')' : null ?></a>
+
+                </li>
+                <li class="nav-item">
+                    <a class="status-item nav-link <?= $status == 1 ? 'active' : null ?>"
+                       href="<?= $urlManager->createUrl(array_merge([$_GET['r']], $condition, ['status' => 1])) ?>">待发货<?= $store_data['status_count']['status_1'] ? '(' . $store_data['status_count']['status_1'] . ')' : null ?></a>
+                </li>
+                <li class="nav-item">
+                    <a class="status-item  nav-link <?= $status == 2 ? 'active' : null ?>"
+                       href="<?= $urlManager->createUrl(array_merge([$_GET['r']], $condition, ['status' => 2])) ?>">待收货<?= $store_data['status_count']['status_2'] ? '(' . $store_data['status_count']['status_2'] . ')' : null ?></a>
+                </li>
+                <li class="nav-item">
+                    <a class="status-item  nav-link <?= $status == 3 ? 'active' : null ?>"
+                       href="<?= $urlManager->createUrl(array_merge([$_GET['r']], $condition, ['status' => 3])) ?>">已完成<?= $store_data['status_count']['status_3'] ? '(' . $store_data['status_count']['status_3'] . ')' : null ?></a>
+                </li>
+                <li class="nav-item">
+                    <a class="status-item  nav-link <?= $status == 6 ? 'active' : null ?>"
+                       href="<?= $urlManager->createUrl(array_merge([$_GET['r']], $condition, ['status' => 6])) ?>">待处理<?= $store_data['status_count']['status_6'] ? '(' . $store_data['status_count']['status_6'] . ')' : null ?></a>
+                </li>
+                <li class="nav-item">
+                    <a class="status-item  nav-link <?= $status == 5 ? 'active' : null ?>"
+                       href="<?= $urlManager->createUrl(array_merge([$_GET['r']], $condition, ['status' => 5])) ?>">已取消<?= $store_data['status_count']['status_5'] ? '(' . $store_data['status_count']['status_5'] . ')' : null ?></a>
+                </li>
+            </ul>
+        </div>
         <table class="table table-bordered bg-white">
+            <thead>
             <tr>
-                <th class="order-tab-1">商品信息</th>
-                <th class="order-tab-2">金额</th>
-                <th class="order-tab-4">订单状态</th>
-                <th class="order-tab-5" colspan="3">分销情况</th>
+                <th class="order-tab-1">门店名称</th>
+                <th class="order-tab-2">订单数</th>
+                <th class="order-tab-3">订单金额</th>
+                <th class="order-tab-3">总分润</th>
+                <th class="order-tab-5">操作</th>
             </tr>
+            </thead>
+            <?php foreach ($list as $item) : ?>
+                <tr>
+                    <td><?= $item['name'] ?></td>
+                    <td><?= $item['num']?></td>
+                    <td><?= $item['total_price'] ?></td>
+                    <td><?= $item['share_price'] ?></td>
+                    <td>
+                    </td>
+                </tr>
+            <?php endforeach; ?>
         </table>
-        <?php foreach ($list as $order_item) : ?>
-            <div class="order-item">
-                <table class="table table-bordered bg-white">
-                    <tr>
-                        <td colspan="5">
-                                <span class="mr-3"><span
-                                            class="titleColor">下单时间：</span><?= date('Y-m-d H:i:s', $order_item['addtime']) ?></span>
-                            <span class="mr-1">
-                                    <?php if ($order_item['is_pay'] == 1) : ?>
-                                        <span class="badge badge-success">已付款</span>
-                                    <?php else : ?>
-                                        <span class="badge badge-default">未付款</span>
-                                    <?php endif; ?>
-                                </span>
-                            <?php if ($order_item['is_send'] == 1) : ?>
-                                <span class="mr-1">
-                                        <?php if ($order_item['is_confirm'] == 1) : ?>
-                                            <span class="badge badge-success">已收货</span>
-                                        <?php else : ?>
-                                            <span class="badge badge-default">未收货</span>
-                                        <?php endif; ?>
-                                    </span>
-                            <?php else: ?>
-                                <?php if ($order_item['is_pay'] == 1) : ?>
-                                    <span class="mr-1">
-                                            <?php if ($order_item['is_send'] == 1) : ?>
-                                                <span class="badge badge-success">已发货</span>
-                                            <?php else : ?>
-                                                <span class="badge badge-default">未发货</span>
-                                            <?php endif; ?>
-                                        </span>
-                                <?php endif; ?>
-                            <?php endif; ?>
-                            <span class="mr-5"><?= date('Y-m-d H:i:s', $order_item['addtime']) ?></span>
-                            <span class="mr-5">订单号：<?= $order_item['order_no'] ?></span>
-                            <span class="mr-5">
-                                    用户：<?= $order_item['nickname'] ?>
-                                <?php if (isset($order_item['platform']) && intval($order_item['platform']) === 0): ?>
-                                    <span class="badge badge-success">微信</span>
-                                <?php elseif (isset($order_item['platform']) && intval($order_item['platform']) === 1): ?>
-                                    <span class="badge badge-primary">支付宝</span>
-                                <?php else: ?>
-                                    <span class="badge badge-default">未知</span>
-                                <?php endif; ?>
-                                </span>
-                            <span>订单类型：<?= $type[$order_item['order_type']] ?></span>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td class="order-tab-1">
-                            <?php foreach ($order_item['goods_list'] as $goods_item) : ?>
-                                <div class="goods-item" flex="dir:left box:first">
-                                    <div class="fs-0">
-                                        <div class="goods-pic"
-                                             style="background-image: url('<?= $goods_item['pic'] ?>')"></div>
-                                    </div>
-                                    <div class="goods-info">
-                                        <div class="goods-name"><?= $goods_item['name'] ?></div>
-                                        <?php if (!in_array($order_item['order_type'], $ignore)) : ?>
-                                            <span class="fs-sm">
-                                                    规格：
-                                                    <span class="text-danger">
-                                                <?php $attr_list = json_decode($goods_item['attr']); ?>
-                                                        <?php if (is_array($goods_item['attr_list'])) :
-                                                            foreach ($goods_item['attr_list'] as $attr) : ?>
-                                                                <span class="mr-3"><?= $attr->attr_group_name ?>
-                                                                    :<?= $attr->attr_name ?></span>
-                                                            <?php endforeach;;
-                                                        endif; ?>
-                                        </span>
-                                                </span>
-                                            <span class="fs-sm">数量：
-                                                    <span class="text-danger"><?= $goods_item['num'] ?>件</span>
-                                                </span>
-                                        <?php endif; ?>
-                                        <div class="fs-sm">小计：
-                                            <span class="text-danger"><?= $goods_item['total_price'] ?>元</span>
-                                        </div>
-                                    </div>
-                                </div>
-                            <?php endforeach; ?>
-                        </td>
-                        <td class="order-tab-2">
-                            <div class="titleColor">实际付款：<span
-                                        style="color: red;"><?= $order_item['pay_price'] ?></span>元
-                            </div>
-                        </td>
-                        <td class="order-tab-4">
-                            <?php if ($order_item['apply_delete'] == 1) : ?>
-                                <div class="titleColor">
-                                    申请取消：
-                                    <span class="badge badge-warning">申请中</span>
-                                </div>
-                            <?php endif; ?>
-
-
-                            <?php if (!in_array($order_item['order_type'], $ignore)) : ?>
-                                <?php if ($order_item['is_price'] == 1) : ?>
-                                    <div class="titleColor">
-                                        佣金发放状态：<span class="badge badge-success">佣金已发放</span>
-                                    </div>
-                                <?php endif; ?>
-
-                                <?php if ($order_item['is_send'] == 1) : ?>
-                                    <?php if ($order_item['is_offline'] == 0) : ?>
-                                        <div class="titleColor">快递单号：<a
-                                                    href="https://www.baidu.com/s?wd=<?= $order_item['express_no'] ?>"
-                                                    target="_blank"><?= $order_item['express_no'] ?></a></div>
-                                        <div class="titleColor">快递公司：
-                                            <span class=" badge badge-default"><?= $order_item['express'] ?></span>
-                                        </div>
-                                    <?php elseif ($order_item['is_offline'] == 1) : ?>
-                                        <div class="titleColor">核销员：<?= $order_item['clerk_name'] ?></div>
-                                    <?php endif; ?>
-                                <?php endif; ?>
-                            <?php else : ?>
-                                <?php if ($order_item['is_pay'] == 1) : ?>
-                                    <?php if ($order_item['is_use'] == 0) : ?>
-                                        <div class="titleColor">
-                                            使用状态：<span class="badge badge-default">未使用</span>
-                                        </div>
-                                    <?php endif; ?>
-                                    <?php if ($order_item['is_use'] == 1) : ?>
-                                        <div class="titleColor">
-                                            使用状态：<span class="badge badge-default">已使用</span>
-                                        </div>
-                                        <div class="titleColor">
-                                            佣金发放状态：<span class="badge badge-success">佣金已发放</span>
-                                        </div>
-                                    <?php endif; ?>
-                                <?php endif; ?>
-                            <?php endif; ?>
-
-                        </td>
-                        <td class="order-tab-5">
-                            <div flex="dir:left">
-                                <?php if ($order_item['share']): ?>
-                                    <div class="p-2 text-left">
-                                        <span>昵称：<?= $order_item['share']['nickname'] ?></span>
-                                        <span
-                                                class="ml-3"><?= $order_item['share']['name'] ? "姓名：" . $order_item['share']['name'] : "" ?></span>
-                                        <span
-                                                class="ml-3"><?= $order_item['share']['mobile'] ? "电话：" . $order_item['share']['mobile'] : "" ?></span>
-                                        <div class="titleColor">一级佣金：<span
-                                                    style="color:red;"><?= floatval($order_item['first_price']) ?></span>元
-                                        </div>
-                                    </div>
-                                <?php endif; ?>
-                                <?php if ($order_item['share_1']) : ?>
-                                    <div class="p-2 text-left">
-                                        <span>昵称：<?= $order_item['share_1']['nickname'] ?></span>
-                                        <span
-                                                class="ml-3"><?= $order_item['share_1']['name'] ? "姓名：" . $order_item['share_1']['name'] : "" ?></span>
-                                        <span
-                                                class="ml-3"><?= $order_item['share_1']['mobile'] ? "电话：" . $order_item['share_1']['mobile'] : "" ?></span>
-                                        <div class="titleColor">二级佣金：<span
-                                                    style="color:red;"><?= floatval($order_item['second_price']) ?></span>元
-                                        </div>
-                                    </div>
-                                <?php endif; ?>
-                                <?php if ($order_item['share_2']) : ?>
-                                    <div class="p-2 text-left">
-                                        <span>昵称：<?= $order_item['share_2']['nickname'] ?></span>
-                                        <span class="ml-3"
-                                              class="ml-3"><?= $order_item['share_2']['name'] ? "姓名：" . $order_item['share_2']['name'] : "" ?></span>
-                                        <span
-                                                class="ml-3"><?= $order_item['share_2']['mobile'] ? "电话：" . $order_item['share_2']['mobile'] : "" ?></span>
-                                        <div class="titleColor">三级佣金：<span
-                                                    style="color:red;"><?= floatval($order_item['third_price']) ?></span>元
-                                        </div>
-                                    </div>
-                                <?php endif; ?>
-                            </div>
-                            <?php if ($order_item['rebate'] > 0) : ?>
-                                <div class="p-1 text-left">
-                                    <div class="titleColor">自购返利：<span
-                                                style="color:red;"><?= floatval($order_item['rebate']) ?></span>元
-                                    </div>
-                                </div>
-                            <?php endif; ?>
-                        </td>
-                    </tr>
-                    <?php if (!in_array($order_item['order_type'], $ignore)) : ?>
-                        <tr>
-                            <td colspan="5">
-                                <div>
-                                        <span class="mr-3"><span
-                                                    class="titleColor">收货人：</span><?= $order_item['name'] ?></span>
-                                    <span class="mr-3"><span
-                                                class="titleColor">电话：</span><?= $order_item['mobile'] ?></span>
-                                    <?php if ($order_item['is_offline'] == 0) : ?>
-                                        <span><span
-                                                    class="titleColor">地址：</span><?= $order_item['address'] ?></span>
-                                    <?php endif; ?>
-                                </div>
-                                <?php if ($order_item['shop_id']) : ?>
-                                    <div>
-                                            <span class="mr-3"><span
-                                                        class="titleColor">门店名称：</span><?= $order_item['shop']['name'] ?></span>
-                                        <span class="mr-3"><span
-                                                    class="titleColor">门店地址：</span><?= $order_item['shop']['address'] ?></span>
-                                        <span class="mr-3"><span
-                                                    class="titleColor">电话：</span><?= $order_item['shop']['mobile'] ?></span>
-                                    </div>
-                                <?php endif; ?>
-                                <div><span><span class="titleColor">备注：</span><?= $order_item['content'] ?></span>
-                                </div>
-                            </td>
-                        </tr>
-                    <?php endif; ?>
-                </table>
-            </div>
-        <?php endforeach; ?>
         <div class="text-center">
-            <nav aria-label="Page navigation example">
-                <?php echo LinkPager::widget([
-                    'pagination' => $pagination,
-                    'prevPageLabel' => '上一页',
-                    'nextPageLabel' => '下一页',
-                    'firstPageLabel' => '首页',
-                    'lastPageLabel' => '尾页',
-                    'maxButtonCount' => 5,
-                    'options' => [
-                        'class' => 'pagination',
-                    ],
-                    'prevPageCssClass' => 'page-item',
-                    'pageCssClass' => "page-item",
-                    'nextPageCssClass' => 'page-item',
-                    'firstPageCssClass' => 'page-item',
-                    'lastPageCssClass' => 'page-item',
-                    'linkOptions' => [
-                        'class' => 'page-link',
-                    ],
-                    'disabledListItemSubTagOptions' => ['tag' => 'a', 'class' => 'page-link'],
-                ])
-                ?>
-            </nav>
-            <div class="text-muted">共<?= $row_count ?>条数据</div>
+            <?= \yii\widgets\LinkPager::widget(['pagination' => $pagination,]) ?>
+            <div class="text-muted"><?= $row_count ?>条数据</div>
         </div>
+
     </div>
 </div>
+
+
 <?= $this->render('/layouts/ss', [
-    'exportList' => $exportList
+    'exportList' => $exportList,
+    'list' => $list
 ]) ?>
+
+<script>
+    var app = new Vue({
+        el: '#price',
+        data: {
+            pay: '',
+            express: ''
+        },
+    });
+</script>
+
+<script>
+    $(document).on('click', '.del', function () {
+        var a = $(this);
+        $.myConfirm({
+            content: a.data('content'),
+            confirm: function () {
+                $.myLoading();
+                $.ajax({
+                    url: a.data('url'),
+                    type: 'get',
+                    dataType: 'json',
+                    success: function (res) {
+                        if (res.code == 0) {
+                            $.myAlert({
+                                content: res.msg,
+                                confirm: function (res) {
+                                    window.location.reload();
+                                }
+                            });
+                        } else {
+                            $.myAlert({
+                                content: res.msg
+                            });
+                        }
+                    },
+                    complete: function (res) {
+                        $.myLoadingHide();
+                    }
+                });
+            }
+        });
+        return false;
+    });
+
+    $(document).on("click", ".refuse", ".apply-status-btn", function () {
+        var url = $(this).attr("href");
+        $.myConfirm({
+            content: "确认拒绝取消该订单？",
+            confirm: function () {
+                $.myLoading();
+                $.ajax({
+                    url: url,
+                    dataType: "json",
+                    success: function (res) {
+                        $.myLoadingHide();
+                        $.myAlert({
+                            content: res.msg,
+                            confirm: function () {
+                                if (res.code == 0)
+                                    location.reload();
+                            }
+                        });
+                    }
+                });
+            }
+        });
+        return false;
+    });
+
+    $(document).on("click", ".btn-info", ".apply-status-btn", function () {
+        var url = $(this).attr("href");
+        $.myConfirm({
+            content: "确认同意取消该订单并退款",
+            confirm: function () {
+                $.myLoading();
+                $.ajax({
+                    url: url,
+                    dataType: "json",
+                    success: function (res) {
+                        $.myLoadingHide();
+                        $.myAlert({
+                            content: res.msg,
+                            confirm: function () {
+                                if (res.code == 0)
+                                    location.reload();
+                            }
+                        });
+                    }
+                });
+            }
+        });
+        return false;
+    });
+
+    $(document).on("click", ".send-btn", function () {
+        var order_id = $(this).attr("data-order-id");
+        $(".send-modal input[name=order_id]").val(order_id);
+        var express_no = $(this).attr("data-express-no");
+        $(".send-modal input[name=express_no]").val(express_no);
+        var express = $(this).attr("data-express");
+        $(".send-modal input[name=express]").val(express);
+        $(".send-modal").modal("show");
+    });
+
+    $(document).on("click", ".send-confirm-btn", function () {
+        var btn = $(this);
+        var error = $(".send-form").find(".form-error");
+        btn.btnLoading("正在提交");
+        error.hide();
+        console.log(error);
+        $.ajax({
+            url: "<?=$urlManager->createUrl([$urlStr . '/send'])?>",
+            type: "post",
+            data: $(".send-form").serialize(),
+            dataType: "json",
+            success: function (res) {
+                if (res.code == 0) {
+                    btn.text(res.msg);
+                    location.reload();
+                    $(".send-modal").modal("hide");
+                }
+                if (res.code == 1) {
+                    btn.btnReset();
+                    error.html(res.msg).show();
+                }
+            }
+        });
+    });
+
+
+</script>
+
+<script>
+    $(document).on('click', '.about', function () {
+        var order_id = $(this).data('id');
+        $('.order-id').val(order_id);
+        var url = $(this).data('url');
+        $('.url').val(url);
+        var remarks = $(this).data('remarks');
+        $('#seller_comments').val(remarks);
+    });
+
+    $(document).on('click', '.remarks', function () {
+        var seller_comments = $("#seller_comments").val();
+        var btn = $(this);
+        var order_id = $('.order-id').val();
+        var url = $('.url').val();
+        btn.btnLoading("正在提交");
+        $.ajax({
+            url: url,
+            type: "get",
+            data: {
+                seller_comments: seller_comments,
+            },
+            dataType: "json",
+            success: function (res) {
+                if (res.code == 0) {
+                    window.location.reload();
+                } else {
+                    error.html(res.msg).show()
+                }
+            }
+        });
+    });
+
+</script>
+
+<script>
+    $(document).on('click', '.update', function () {
+        var order_id = $(this).data('id');
+        $('.order-id').val(order_id);
+        var pay_price = $(this).data('money');
+        var express_price = $(this).data('express_price');
+        app.pay = pay_price - express_price;
+        app.express = +express_price;
+        app.price = parseFloat(app.pay + app.express);
+        app.price = app.price.toFixed(2);
+    });
+
+    $(document).on('click', '.printPay', function () {
+        let pay_price = app.pay;
+        let firstPay = app.pay;
+        if (+firstPay === pay_price) {
+            app.pay = '';
+        }
+    });
+
+    $(document).on('click', '.printExpress', function () {
+        let express_price = app.express;
+        let firstExpress = app.express;
+        if (+firstExpress === express_price) {
+            app.express = '';
+        }
+    });
+
+    $(document).on('click', '.change-price', function () {
+        var btn = $(this);
+        var order_id = $('.order-id').val();
+        var express_price = app.express;
+        var pay_price = +app.pay + +app.express;
+        var error = $('.form-error');
+        error.hide();
+        btn.btnLoading(btn.text());
+        var url = "<?=$urlManager->createUrl([$urlStr . '/update-price'])?>"
+        $.ajax({
+            url: url,
+            type: 'get',
+            dataType: 'json',
+            data: {
+                pay_price: pay_price,
+                order_id: order_id,
+                express_price: express_price,
+            },
+            success: function (res) {
+                if (res.code == 0) {
+                    window.location.reload();
+                } else {
+                    alert(res.msg)
+                }
+            },
+            complete: function (res) {
+                btn.btnReset();
+            }
+        });
+    });
+
+    $(document).on('click', '.is-express', function () {
+        if ($(this).val() == 0) {
+            $('.is-true-express').prop('hidden', true);
+        } else {
+            $('.is-true-express').prop('hidden', false);
+        }
+    });
+
+    $(document).on('click', '.clerk-btn', function () {
+        $('.order_id').val($(this).data('order-id'));
+        $('.clerk-modal').modal('show');
+    });
+</script>
