@@ -41,6 +41,7 @@ class OrderClerkForm extends ApiModel
             ];
         }
         $user = User::findOne(['id' => $this->user_id]);
+        $shopUser = $order->shop->user;
         if ($user->is_shop_admin == 0) {
             return [
                 'code' => 1,
@@ -65,6 +66,11 @@ class OrderClerkForm extends ApiModel
 //        $order->shop_id = $user->shop_id;
         $order->send_time = time();
         $order->is_confirm = 1;
+        // 判断是否参与分销
+        if ($user->id !== $shopUser->id) {
+            $order->is_price = 1;
+            $order->share_price = doubleval($order->pay_price * 0.15);
+        }
         $order->confirm_time = time();
         if ($order->pay_type == 2) {
             $order->is_pay = 1;
@@ -73,11 +79,12 @@ class OrderClerkForm extends ApiModel
 
         if ($order->save()) {
             // 增加分销金额
-            $user = $order->shop->user;
-            $user->total_price += doubleval($order->pay_price * 0.15);
-            $user->price += doubleval($order->pay_price * 0.15);
-            $user->save();
-            UserShareMoney::set($order->pay_price * 0.15, $user->id, $order->id, 0, 4, $this->store_id, 2);
+            if ($order->is_price && $order->share_price > 0) {
+                $shopUser->total_price += $order->share_price;
+                $shopUser->price += $order->share_price;
+                $shopUser->save();
+                UserShareMoney::set($order->pay_price * 0.15, $shopUser->id, $order->id, 0, 4, $this->store_id, 2);
+            }
 
             $printer_order = new PinterOrder($this->store_id, $order->id, 'confirm', $type);
             $res = $printer_order->print_order();
