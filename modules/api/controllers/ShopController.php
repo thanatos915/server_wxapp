@@ -133,7 +133,7 @@ class ShopController extends Controller
         if ($result) {
             return new BaseApiResponse([
                 'code' => 0,
-                'msg' => 'success',
+                'msg' => '申请成功',
                 'data' => [],
             ]);
         } else {
