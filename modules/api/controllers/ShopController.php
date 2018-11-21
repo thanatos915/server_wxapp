@@ -14,6 +14,7 @@ use app\models\Setting;
 use app\models\Shop;
 use app\models\User;
 use app\models\UserShareMoney;
+use app\modules\api\models\ShopJoinForm;
 use app\modules\mch\models\ShopSendForm;
 use Yii;
 use app\modules\api\behaviors\LoginBehavior;
@@ -124,5 +125,24 @@ class ShopController extends Controller
             ],
         ]);
     }
+
+    public function actionShopJoin()
+    {
+        $form = new ShopJoinForm();
+        $result = $form->submit(Yii::$app->request->post());
+        if ($result) {
+            return new BaseApiResponse([
+                'code' => 0,
+                'msg' => 'success',
+                'data' => [],
+            ]);
+        } else {
+            return new BaseApiResponse( [
+                'code' => 1,
+                'msg' => '申请失败'
+            ]);
+        }
+    }
+
 
 }
