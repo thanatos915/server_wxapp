@@ -120,6 +120,15 @@ class OrderForm extends ApiModel
                     $mch['shop_list'] = [];
                     $mch['is_shop'] = '';
                 }
+                // 获取上次门店
+                $prevOrder = Order::find()->where(['user_id' => $this->user_id])->orderBy(['addtime' => SORT_DESC])->one();
+                if ($prevOrder && $mch['shop_list']) {
+                    foreach ($mch['shop_list']  as $item) {
+                        if ($item['id'] == $prevOrder->shop_id) {
+                            $mch['shop'] = $item;
+                        }
+                    }
+                }
             } else {
                 $_mch = Mch::findOne([
                     'store_id' => $this->store_id,
