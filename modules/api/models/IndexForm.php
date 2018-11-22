@@ -104,6 +104,7 @@ class IndexForm extends ApiModel
             $form->attributes = \Yii::$app->request->get();
             $form->store_id = $this->store->id;
             $cat_list = $form->search();
+            array_unshift($cat_list, ['id' => 0, 'name' => '全部']);
             \Yii::$app->cache->set($cat_list_cache_key, $cat_list, 60 * 10);
         }
 
