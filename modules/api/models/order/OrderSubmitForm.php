@@ -20,6 +20,7 @@ use app\models\Model;
 use app\models\Order;
 use app\models\OrderDetail;
 use app\models\Register;
+use app\models\User;
 use app\models\UserCoupon;
 use app\utils\PinterOrder;
 
@@ -180,6 +181,12 @@ class OrderSubmitForm extends OrderForm
         }
         if ($mch['express_price'] > 0 && $mch['offline'] == 0) {
             $payPrice += $mch['express_price'];
+        }
+        // TODO 团长身份直接优惠15%
+        /** @var User $user */
+        $user = \Yii::$app->user->identity;
+        if ($user->is_shop_admin && $user->shop_id) {
+            $payPrice = $payPrice * 0.85;
         }
 
         return $payPrice >= 0 ? $payPrice : 0;

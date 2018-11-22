@@ -41,6 +41,7 @@ class ShopJoinForm extends ApiModel
 
         $model = new ShopJoin();
         $model->attributes = $this->attributes;
+        $model->created_at = time();
         if (!$model->save()) {
             return false;
         }

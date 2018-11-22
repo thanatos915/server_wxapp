@@ -11,6 +11,8 @@
 namespace app\modules\api\models\order;
 
 
+use app\models\User;
+
 class OrderSubmitPreviewForm extends OrderForm
 {
     public function rules()
@@ -33,15 +35,18 @@ class OrderSubmitPreviewForm extends OrderForm
                 'msg'=>$e->getMessage()
             ];
         }
+        /** @var User $user */
+        $user = \Yii::$app->user->identity;
         return [
             'code' => 0,
-            'msg' => 'OOKK',
+            'msg' => 'OK',
             'data' => [
                 'pay_type_list' => $this->getPayTypeList(),
                 'address' => $this->address,
                 'level' => $this->getLevelData(),
                 'mch_list' => $mchList,
-                'integral'=>$this->integral
+                'integral' => $this->integral,
+                'is_shop_admin' => ($user->is_shop_admin && $user->shop_id) ? true : false
             ],
         ];
     }
