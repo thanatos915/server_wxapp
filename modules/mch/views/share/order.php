@@ -161,7 +161,7 @@ if ($status === '' || $status === null || $status == -1) {
                                 <?php
                                 $isEcho = false;
                                 foreach ($shopList as $k => $v) {
-                                    if($_GET['shop'] == $v['id']) {
+                                    if ($_GET['shop'] == $v['id']) {
                                         $isEcho = true;
                                         echo $v['name'];
                                     }
@@ -230,10 +230,18 @@ if ($status === '' || $status === null || $status == -1) {
                 <th class="order-tab-5">操作</th>
             </tr>
             </thead>
+            <tr>
+                <td>平台总计</td>
+                <td><?= $sumData['num'] ?></td>
+                <td><?= $sumData['total_price'] ?></td>
+                <td><?= $sumData['share_price'] ?></td>
+                <td>
+                </td>
+            </tr>
             <?php foreach ($list as $item) : ?>
                 <tr>
                     <td><?= $item['name'] ?></td>
-                    <td><?= $item['num']?></td>
+                    <td><?= $item['num'] ?></td>
                     <td><?= $item['total_price'] ?></td>
                     <td><?= $item['share_price'] ?></td>
                     <td>

@@ -634,7 +634,8 @@ class ShareController extends Controller
             'row_count' => $data['row_count'],
             'pagination' => $data['pagination'],
             'list' => $data['list'],
-            'shopList' => $shopList['list']
+            'shopList' => $shopList['list'],
+            'sumData' => $data['sumData']
         ]);
     }
 
