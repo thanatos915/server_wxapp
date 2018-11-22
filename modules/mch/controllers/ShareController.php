@@ -16,6 +16,7 @@ use app\modules\api\models\ApiModel;
 use app\modules\mch\models\ExportList;
 use app\modules\mch\models\ShopForm;
 use app\modules\mch\models\ShopOrderListForm;
+use app\modules\mch\models\ShopStatisticalForm;
 use app\utils\Sms;
 use app\hejiang\ApiResponse;
 use app\hejiang\ValidationErrorResponse;
@@ -635,6 +636,20 @@ class ShareController extends Controller
             'list' => $data['list'],
             'shopList' => $shopList['list']
         ]);
+    }
+
+    public function actionStatistical()
+    {
+        $form = new ShopStatisticalForm();
+        $form->attributes = \Yii::$app->request->get();
+        $form->attributes = \Yii::$app->request->post();
+        $data = $form->search();
+
+        return $this->render('statistical', [
+            'list' => $data['list'],
+            'date' => $data['date']
+        ]);
+
     }
 
 }

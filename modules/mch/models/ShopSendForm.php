@@ -29,7 +29,7 @@ class ShopSendForm extends ApiModel
             return $this->errorResponse;
         }
 
-        $shop = Shop::findOne(['id' => $id, 'store_id' => $this->store->id, 'is_delete' => 0]);
+        $shop = Shop::findOne(['id' => $this->id, 'store_id' => $this->store->id, 'is_delete' => 0]);
         $dingshi = Dingshi::findOne(['store_id' => $this->store->id]);
         // 检测当前时间
         $time = date('H');
@@ -45,9 +45,9 @@ class ShopSendForm extends ApiModel
         // 订单结束时间
         $end = strtotime($end_date);
         $query = Order::find();
-//        $query->andWhere(['shop_id' => $shop->id])
-//            ->andWhere(['and', ['>=', 'addtime', $start], ['<', 'addtime', $end]])
-//            ->andWhere(['is_pay' => 1]);
+        $query->andWhere(['shop_id' => $shop->id])
+            ->andWhere(['and', ['>=', 'addtime', $start], ['<', 'addtime', $end]])
+            ->andWhere(['is_pay' => 1]);
 
         $order_list = $query->all();
 

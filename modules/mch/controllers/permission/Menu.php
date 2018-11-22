@@ -437,6 +437,11 @@ class Menu
                         'is_menu' => true,
                         'route' => 'mch/share/order',
                     ],
+                    [
+                        'name' => '订单统计',
+                        'is_menu' => true,
+                        'route' => 'mch/share/statistical',
+                    ],
                 ],
             ],
             [
