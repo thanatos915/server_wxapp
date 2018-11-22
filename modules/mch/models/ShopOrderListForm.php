@@ -103,7 +103,7 @@ class ShopOrderListForm extends MchModel
         }
 
         // 查询平台总计数据
-        $newQuery = Order::find()->select('sum(pay_price) as total_price, count(id) as num, sum(share_price) as share_price');
+        $newQuery->select('sum(pay_price) as total_price, count(id) as num, sum(share_price) as share_price');
         $sumData = $newQuery->asArray()->one();
 
         $count = $query->count();
