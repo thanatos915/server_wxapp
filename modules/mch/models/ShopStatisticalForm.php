@@ -53,7 +53,7 @@ class ShopStatisticalForm extends MchModel
 
         // 查出售出的所有商品
         $query = Order::find()->alias('o')->leftJoin(OrderDetail::tableName() . 'as od', 'o.id = od.order_id')
-//            ->andWhere(['and', ['>=', 'o.addtime', $start], ['<', 'o.addtime', $end]])
+            ->andWhere(['and', ['>=', 'o.addtime', $start], ['<', 'o.addtime', $end]])
             ->andWhere(['o.is_pay' => 1])
             ->leftJoin(Goods::tableName() . 'as g', 'g.id = od.goods_id')
             ->select('g.name,sum(od.num) as num')->orderBy(['o.addtime' => SORT_DESC])->groupBy('od.goods_id');
