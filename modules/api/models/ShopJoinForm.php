@@ -13,18 +13,20 @@ use app\models\ShopJoin;
 
 class ShopJoinForm extends ApiModel
 {
+    public $user_id;
     public $community;
     public $province;
     public $name;
     public $mobile;
     public $district;
     public $city;
+    public $store_id;
 
     public function rules()
     {
         return [
-            [['province', 'city', 'district', 'name', 'mobile', 'community', 'city'], 'required'],
-            [['province', 'city', 'district'], 'integer'],
+            [['province', 'city', 'district', 'name', 'mobile', 'community', 'city', 'store_id', 'user_id'], 'required'],
+            [['province', 'city', 'district', 'store_id', 'user_id'], 'integer'],
             [['name', 'mobile', 'community'], 'string']
         ];
     }

@@ -129,6 +129,8 @@ class ShopController extends Controller
     public function actionShopJoin()
     {
         $form = new ShopJoinForm();
+        $form->store_id = $this->store->id;
+        $form->user_id = Yii::$app->user->id;
         $result = $form->submit(Yii::$app->request->post());
         if ($result) {
             return new BaseApiResponse([

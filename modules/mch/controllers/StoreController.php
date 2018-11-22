@@ -14,7 +14,9 @@ use app\models\common\admin\store\CommonAppDisabled;
 use app\models\common\admin\store\CommonStoreUpload;
 use app\models\common\CommonDistrict;
 use app\models\Dingshi;
+use app\models\ShopJoin;
 use app\modules\mch\models\PickLinkForm;
+use app\modules\mch\models\ShopJoinForm;
 use app\modules\mch\models\ShopSendForm;
 use app\modules\mch\models\UserListForm;
 use app\modules\mch\models\WxForm;
@@ -1156,6 +1158,40 @@ class StoreController extends Controller
             'pagination' => $arr['pagination'],
             'list' => $arr['list'],
         ]);
+    }
+
+    public function actionShopJoin()
+    {
+        $form = new ShopJoinForm();
+        $form->attributes = \Yii::$app->request->get();
+        $form->store_id = $this->store->id;
+        $data = $form->search();
+        return $this->render('shop-join', [
+            'row_count' => $data['row_count'],
+            'pagination' => $data['pagination'],
+            'list' => $data['list'],
+        ]);
+    }
+
+    public function actionShopJoinHandle()
+    {
+        $status = \Yii::$app->request->get('status');
+        $id = \Yii::$app->request->get('id');
+        $model = ShopJoin::findOne(['id' => $id]);
+        if (!$model) {
+            return [
+                'code' => 1,
+                'msg' => '网络异常',
+            ];
+        }
+
+        $model->status = $status;
+        $model->save();
+        return [
+            'code' => 0,
+            'msg' => '成功',
+        ];
+
     }
 
     /**

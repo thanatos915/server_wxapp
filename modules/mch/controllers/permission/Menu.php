@@ -406,6 +406,11 @@ class Menu
                 'icon' => 'icon-barrage',
                 'children' => [
                     [
+                        'name' => '申请列表',
+                        'is_menu' => true,
+                        'route' => 'mch/store/shop-join',
+                    ],
+                    [
                         'name' => '门店列表',
                         'is_menu' => true,
                         'route' => 'mch/store/shop',
