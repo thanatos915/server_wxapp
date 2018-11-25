@@ -27,18 +27,7 @@ $this->params['active_nav_group'] = 10;
                     <label class="col-form-label required">开始时间</label>
                 </div>
                 <div class="col-sm-6">
-                        <select class="form-control parent" name="start_time">
-                            <option value="">请选择开始时间</option>
-                            <?php
-                            for ($i = 1; $i <= 24; $i++) {
-                                ?>
-                                <option value="<?= $i ?>" <?php if($model->start_time == $i) {
-                                    echo 'selected';
-                                } ?>><?= $i ?></option>
-                                <?php
-                            }
-                            ?>
-                        </select>
+                    <input type="text" class="form-control" name="start_time" placeholder="请填写时间如 08:30" value="<?= $model->start_time ?>">
                 </div>
             </div>
             <div class="form-group row">
@@ -46,18 +35,7 @@ $this->params['active_nav_group'] = 10;
                     <label class="col-form-label required">结束时间</label>
                 </div>
                 <div class="col-sm-6">
-                    <select class="form-control parent" name="end_time">
-                        <option value="">请选择结束时间</option>
-                        <?php
-                        for ($i = 1; $i <= 24; $i++) {
-                            ?>
-                            <option value="<?= $i ?>" <?php if($model->end_time == $i) {
-                                echo 'selected';
-                            } ?>><?= $i ?></option>
-                            <?php
-                        }
-                        ?>
-                    </select>
+                    <input type="text" class="form-control" name="end_time" placeholder="请填写时间如 08:30" value="<?= $model->end_time ?>">
                 </div>
             </div>
             <div class="form-group row">

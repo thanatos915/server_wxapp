@@ -216,8 +216,8 @@ class OrderSubmitPreviewForm extends ApiModel
                 'msg' => '商品不存在或已下架。',
             ];
         }
-        $start_time = strtotime($miaosha_goods->open_date . $dingshi->start_time . ':00:00');
-        $end_time = strtotime($miaosha_goods->open_date . $dingshi->end_time . ':00:00');
+        $start_time = strtotime($miaosha_goods->open_date . $dingshi->start_time . ':00');
+        $end_time = strtotime($miaosha_goods->open_date . $dingshi->end_time . ':00');
         if ($start_time > time() || $end_time < time()) {
             return [
                 'code' => 1,

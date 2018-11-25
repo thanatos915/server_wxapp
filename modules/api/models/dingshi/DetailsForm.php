@@ -212,8 +212,8 @@ class DetailsForm extends ApiModel
             'dingshi_num' => $total_dingshi_num,
             'sell_num' => $total_sell_num,
             'dingshi_price' => (float)$dingshi_price,
-            'begin_time' => strtotime($dingshi_goods->open_date . ' ' . $dingshi->start_time . ':00:00'),
-            'end_time' => strtotime($dingshi_goods->open_date . ' ' . $dingshi->end_time. ':00:00'),
+            'begin_time' => strtotime($dingshi_goods->open_date . ' ' . $dingshi->start_time . ':00'),
+            'end_time' => strtotime($dingshi_goods->open_date . ' ' . $dingshi->end_time. ':00'),
             'now_time' => time(),
             'dingshi_data' => $dingshi_data,
             'dingshi_goods_id' => $this->dingshi_goods->id
