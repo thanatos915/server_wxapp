@@ -76,7 +76,7 @@ class OrderClerkForm extends ApiModel
             $order->is_pay = 1;
             $order->pay_time = time();
         }
-        var_dump($order);
+        var_dump($order->attributes);
         var_dump($order->save());exit;
         if ($order->save()) {
             // 增加分销金额
