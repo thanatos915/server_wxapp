@@ -67,7 +67,7 @@ class OrderClerkForm extends ApiModel
         $order->send_time = time();
         $order->is_confirm = 1;
         // 判断是否参与分销
-        if ($user->id !== $shopUser->id) {
+        if ($order->user_id !== $shopUser->id) {
             $order->is_price = 1;
             $order->share_price = doubleval($order->pay_price * 0.15);
         }
@@ -76,8 +76,6 @@ class OrderClerkForm extends ApiModel
             $order->is_pay = 1;
             $order->pay_time = time();
         }
-        var_dump($order->attributes);
-        var_dump($order->save());exit;
         if ($order->save()) {
             // 增加分销金额
             if ($order->is_price && $order->share_price > 0) {
