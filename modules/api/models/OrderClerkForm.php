@@ -76,7 +76,8 @@ class OrderClerkForm extends ApiModel
             $order->is_pay = 1;
             $order->pay_time = time();
         }
-
+        var_dump($order);
+        var_dump($order->save());exit;
         if ($order->save()) {
             // 增加分销金额
             if ($order->is_price && $order->share_price > 0) {
