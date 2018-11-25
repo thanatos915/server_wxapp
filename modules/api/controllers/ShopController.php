@@ -50,7 +50,7 @@ class ShopController extends Controller
 
 
         $data = [
-            'total_price' => $total_price,
+            'total_price' => $total_price ?: 0,
             'commission' => $user->price,
             'total_commission' => $user->total_price
         ];
