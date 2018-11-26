@@ -32,12 +32,12 @@ class ShopSendForm extends ApiModel
         $shop = Shop::findOne(['id' => $this->id, 'store_id' => $this->store->id, 'is_delete' => 0]);
         $dingshi = Dingshi::findOne(['store_id' => $this->store->id]);
 
-        $endtime = strtotime(date('Y-m-d'). $dingshi->end_time . '00');
+        $endtime = strtotime(date('Y-m-d') . ' '. $dingshi->end_time . ':00');
         // 检测当前时间
         $time = time();
         if ($time > $endtime) {
             $start_date = date('Y-m-d');
-            $end_date = strtotime('+1 days');
+            $end_date = date('Y-m-d', strtotime('+1 days'));
         } else {
             $start_date = date('Y-m-d', strtotime('-1 days'));
             $end_date = date('Y-m-d');

@@ -140,7 +140,7 @@ class DingshiGoodsListForm extends ApiModel
                 $list[$i]['pic_url'] = Goods::getGoodsPicStatic($item['id'])->pic_url;
             }
             $list[$i]['sales'] = $this->numToW($item['num'] + $item['virtual_sales']) . $item['unit'];
-            $list[$i]['end_time'] = strtotime(date('Y-m-d') . $dingshi->end_time . ':00');
+            $list[$i]['end_time'] = strtotime(date('Y-m-d') . ' ' . $dingshi->end_time . ':00');
         }
         $data = [
             'row_count' => $count,

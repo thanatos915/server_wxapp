@@ -35,7 +35,7 @@ class ShopStatisticalForm extends MchModel
 
         // 计算订单开始和结束时间
         $dingshi = Dingshi::findOne(['store_id' => $this->store->id]);
-        $endtime = strtotime(date('Y-m-d'). $dingshi->end_time . '00');
+        $endtime = strtotime(date('Y-m-d') . ' '. $dingshi->end_time . ':00');
         // 检测当前时间
         $time = time();
         $nowTime = strtotime($this->date);
