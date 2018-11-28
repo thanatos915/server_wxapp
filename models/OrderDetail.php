@@ -18,6 +18,7 @@ use Yii;
  * @property string $pic
  * @property string $integral
  * @property integer $is_level
+ * @property Goods $goods
  */
 class OrderDetail extends \yii\db\ActiveRecord
 {

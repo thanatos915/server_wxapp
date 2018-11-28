@@ -378,6 +378,17 @@ if (!$returnUrl) {
 
                     <div class="form-group row">
                         <div class="col-3 text-right">
+                            <label class=" col-form-label required">店铺分成比例</label>
+                        </div>
+                        <div class="col-9">
+                            <input class="form-control short-row" type="number" name="model[shop_share_commission]"
+                                   value="<?= $goods['shop_share_commission'] ?>" min="0" max="100">
+                            <div class="text-muted fs-sm">单个商品的分成比例</div>
+                        </div>
+                    </div>
+
+                    <div class="form-group row">
+                        <div class="col-3 text-right">
                             <label class=" col-form-label">重量</label>
                         </div>
                         <div class="col-9">

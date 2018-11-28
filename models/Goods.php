@@ -30,6 +30,7 @@ use yii\helpers\VarDumper;
  * @property string $share_commission_first
  * @property string $share_commission_second
  * @property string $share_commission_third
+ * @property string $shop_share_commission
  * @property double $weight
  * @property string $freight
  * @property string $full_cut
@@ -72,7 +73,7 @@ class Goods extends \yii\db\ActiveRecord
     {
         return [
             [['store_id', 'name', 'detail', 'attr'], 'required'],
-            [['store_id', 'cat_id', 'status', 'addtime', 'is_delete', 'sort', 'individual_share', 'freight', 'use_attr', 'share_type', 'quick_purchase', 'hot_cakes', 'mch_id', 'goods_num', 'member_discount', 'virtual_sales', 'mch_sort', 'type', 'is_level', 'confine_count', 'is_negotiable'], 'integer'],
+            [['store_id', 'cat_id', 'status', 'addtime', 'is_delete', 'sort', 'individual_share', 'freight', 'use_attr', 'share_type', 'quick_purchase', 'hot_cakes', 'mch_id', 'goods_num', 'member_discount', 'virtual_sales', 'mch_sort', 'type', 'is_level', 'confine_count', 'is_negotiable', 'shop_share_commission'], 'integer'],
             [['price', 'original_price', 'share_commission_first', 'share_commission_second', 'share_commission_third', 'weight', 'cost_price', 'rebate'], 'number'],
             [['detail', 'attr', 'cover_pic', 'full_cut', 'integral'], 'string'],
             [['name', 'unit'], 'string', 'max' => 255],

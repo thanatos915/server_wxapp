@@ -69,7 +69,14 @@ class OrderClerkForm extends ApiModel
         // 判断是否参与分销
         if ($order->user_id !== $shopUser->id) {
             $order->is_price = 1;
-            $order->share_price = doubleval($order->pay_price * 0.15);
+            // 计算分成金额
+            $details = $order->detail;
+            $share_price = 0;
+            foreach ($details as $k => $item) {
+                $commission = $item->goods->shop_share_commission ?: 15;
+                $share_price += ($commission / 100) * $item->total_price;
+            }
+            $order->share_price = doubleval($share_price);
         }
         $order->confirm_time = time();
         if ($order->pay_type == 2) {

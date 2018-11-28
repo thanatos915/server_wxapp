@@ -43,6 +43,7 @@ class GoodsForm extends MchModel
     public $share_commission_first;
     public $share_commission_second;
     public $share_commission_third;
+    public $shop_share_commission;
     public $weight;
     public $freight;
 
@@ -79,8 +80,8 @@ class GoodsForm extends MchModel
             [['name', 'goods_no', 'unit'], 'string', 'max' => 255],
             [['sort'], 'default', 'value' => 1000],
             [['attr', 'individual_share', 'full_cut', 'integral', 'goods_card'], 'safe',],
-            [['share_commission_first', 'share_commission_second', 'share_commission_third', 'freight', 'rebate', 'virtual_sales', 'individual_share', 'goods_no', 'confine_count', 'plugin', 'cost_price', 'quick_purchase'], 'default', 'value' => 0],
-            [['share_commission_first', 'share_commission_second', 'share_commission_third', 'rebate', 'weight', 'cost_price'], 'number', 'min' => 0, 'max' => 999999],
+            [['share_commission_first', 'share_commission_second', 'share_commission_third', 'freight', 'rebate', 'virtual_sales', 'individual_share', 'goods_no', 'confine_count', 'plugin', 'cost_price', 'quick_purchase', 'shop_share_commission'], 'default', 'value' => 0],
+            [['share_commission_first', 'share_commission_second', 'share_commission_third', 'rebate', 'weight', 'cost_price', 'shop_share_commission'], 'number', 'min' => 0, 'max' => 999999],
             [['goods_num', 'virtual_sales', 'sort', 'freight', 'confine_count'], 'integer', 'min' => 0, 'max' => 999999],
             [['use_attr', 'plugins'], 'safe'],
             [['attr'], 'app\modules\mch\models\AttrValidator'],
