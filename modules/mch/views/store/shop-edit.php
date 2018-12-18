@@ -239,7 +239,7 @@ $this->params['active_nav_group'] = 1;
                     <div class="modal-body">
                             <div class="form-group">
                                 <div class="input-group">
-                                    <input class="form-control keyword" placeholder="输入昵称查找">
+                                    <input class="form-control user-keyword" placeholder="输入昵称查找">
                                     <input class="form-control order-id" type="hidden">
                                     <span class="input-group-btn">
                                     <button v-on:click="showKeyword()" class="btn btn-info">
@@ -292,7 +292,7 @@ $this->params['active_nav_group'] = 1;
             //关键字查询
             showKeyword: function () {
                 var _self = this;
-                var keyword = $.trim($('.keyword').val());
+                var keyword = $.trim($('.user-keyword').val());
                 if (keyword == "") {
                     _self.show_user_list = _self.user_list;
                     return;
